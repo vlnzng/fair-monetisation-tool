@@ -10,34 +10,23 @@ import {
 } from "./data/rules.js";
 import { mapLevel } from "./utils.js";
 
-function filterQuestions(state, { forScoring = false } = {}) {
+// The questions that are asked and scored in the given context.
+export function getQuestions(state) {
     const minors = state?.context?.minors ?? CONTEXT_DEFAULTS.minors;
-    let list = QUESTIONS.slice();
 
-    if (minors === "no") {
-        // Keep D1 (hard trigger), drop D2 and D3.
-        list = list.filter(q => !(q.block === "D" && (q.id === "D2" || q.id === "D3")));
-    }
+    // Without minors in the audience, D2 and D3 do not apply. D1 stays.
+    if (minors === "no") return QUESTIONS.filter(q => q.id !== "D2" && q.id !== "D3");
 
-    return list;
-}
-
-export function getUiQuestions(state) {
-    return filterQuestions(state, { forScoring: false });
-}
-
-function getScoringQuestions(state) {
-    return filterQuestions(state, { forScoring: true });
+    return QUESTIONS.slice();
 }
 
 export function runAssessment(state) {
-    const relevant = getScoringQuestions(state);
+    const relevant = getQuestions(state);
     const mods = contextModifiers(state.context);
 
     const blockTotals = {};
     for (const b of BLOCKS) blockTotals[b.id] = 0;
 
-    const triggeredBlocks = new Set();
     let total = 0;
 
     for (const q of relevant) {
@@ -54,8 +43,6 @@ export function runAssessment(state) {
 
         blockTotals[q.block] = (blockTotals[q.block] ?? 0) + weighted;
         total += weighted;
-
-        if (weighted >= 2) triggeredBlocks.add(q.block);
     }
 
     const triggers = [];
@@ -110,7 +97,6 @@ export function runAssessment(state) {
             "Document the rationale for key monetisation UX decisions and re-run the assessment for other flows."
         );
     }
-
 
     return { overallLevel, overallTotal: total, blockLevels, blockTotals, triggers, recommendations };
 }

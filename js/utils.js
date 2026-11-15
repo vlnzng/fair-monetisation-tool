@@ -3,7 +3,6 @@ export function el(tag, attrs = {}, children = []) {
     for (const [k, v] of Object.entries(attrs)) {
         if (k === "class") node.className = v;
         else if (k.startsWith("data-")) node.setAttribute(k, v);
-        else if (k === "html") node.innerHTML = v;
         else if (k in node) node[k] = v;
         else node.setAttribute(k, v);
     }
@@ -22,8 +21,4 @@ export function mapLevel(total, thresholds) {
     if (total <= thresholds.greenMax) return "green";
     if (total <= thresholds.yellowMax) return "yellow";
     return "red";
-}
-
-export function safeJsonClone(obj) {
-    return JSON.parse(JSON.stringify(obj));
 }

@@ -1,7 +1,7 @@
 import { BLOCKS } from "./data/questions.js";
 import { CONTEXT_DEFAULTS, CONTEXT_OPTIONS, LEVELS } from "./data/rules.js";
-import { getUiQuestions, runAssessment } from "./scoring.js";
-import { el, clamp, safeJsonClone } from "./utils.js";
+import { getQuestions, runAssessment } from "./scoring.js";
+import { el, clamp } from "./utils.js";
 
 // Always start at the top on first load and reload.
 // - Prevent scroll restoration to an anchored section after reload.
@@ -97,20 +97,12 @@ function initAssessment() {
             return;
         }
 
-        if (state.step === steps.length - 2) {
-            btnNext.textContent = "View results";
+        btnNext.textContent = "View results";
 
-            const ready = !!state.questionsComplete;
-            btnNext.disabled = !ready;
-            btnNext.classList.toggle("is-ready", ready);
-            btnNext.dataset.ready = ready ? "true" : "false";
-            return;
-        }
-
-        btnNext.textContent = "Next";
-        btnNext.disabled = false;
-        btnNext.classList.remove("is-ready");
-        btnNext.removeAttribute("data-ready");
+        const ready = !!state.questionsComplete;
+        btnNext.disabled = !ready;
+        btnNext.classList.toggle("is-ready", ready);
+        btnNext.dataset.ready = ready ? "true" : "false";
     };
 
     btnPrev?.addEventListener("click", () => setStep(state.step - 1));
@@ -118,7 +110,7 @@ function initAssessment() {
     btnNext?.addEventListener("click", () => {
         if (state.step === 0 && state.context.minors == null) return;
         if (state.step === 1) {
-            const ui = getUiQuestions(state);
+            const ui = getQuestions(state);
             const missing = ui.map(q => q.id).filter(id => !(id in state.answers));
             if (missing.length) return; // button should be disabled anyway
         }
@@ -168,7 +160,7 @@ function renderContextStep(state, { onContextChanged } = {}) {
             onchange: e => {
                 state.context.minors = e.target.value;
                 // Drop answers to questions that are no longer asked in this context.
-                const asked = new Set(getUiQuestions(state).map(q => q.id));
+                const asked = new Set(getQuestions(state).map(q => q.id));
                 Object.keys(state.answers)
                     .filter(id => !asked.has(id))
                     .forEach(id => delete state.answers[id]);
@@ -280,7 +272,7 @@ function renderQuestionsStep(state, { onQuestionsCompletenessChanged } = {}) {
     // Progressive reveal: show one block at a time until it is fully answered.
     const updateBlocks = (anchorQid = null) => {
         preserveViewportAround(anchorQid, () => {
-            const uiQuestions = getUiQuestions(state);
+            const uiQuestions = getQuestions(state);
             const groups = groupByBlock(uiQuestions);
             const orderedBlockIds = BLOCKS.map(b => b.id);
             const visibleBlocks = [];

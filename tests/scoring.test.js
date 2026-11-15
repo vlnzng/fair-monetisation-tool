@@ -9,7 +9,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 
-import { getUiQuestions, runAssessment } from "../js/scoring.js";
+import { getQuestions, runAssessment } from "../js/scoring.js";
 import { QUESTIONS } from "../js/data/questions.js";
 import { AREAS_TO_REVIEW } from "../js/data/rules.js";
 
@@ -19,12 +19,12 @@ const BLOCK_IDS = ["A", "B", "C", "D"];
 function assess(minors, overrides = {}) {
     const context = { minors };
     const answers = {};
-    for (const q of getUiQuestions({ context })) answers[q.id] = "yes";
+    for (const q of getQuestions({ context })) answers[q.id] = "yes";
     return runAssessment({ context, answers: { ...answers, ...overrides } });
 }
 
 test("minors = no drops D2 and D3, the other contexts ask all twelve questions", () => {
-    const ids = minors => getUiQuestions({ context: { minors } }).map(q => q.id);
+    const ids = minors => getQuestions({ context: { minors } }).map(q => q.id);
     const all = QUESTIONS.map(q => q.id);
 
     assert.equal(all.length, 12);
@@ -235,7 +235,7 @@ for (const [block, prompts] of Object.entries(AREAS_TO_REVIEW)) {
 
 function fingerprint(minors) {
     const context = { minors };
-    const ids = getUiQuestions({ context }).map(q => q.id);
+    const ids = getQuestions({ context }).map(q => q.id);
     const counts = { green: 0, yellow: 0, red: 0 };
     const levels = createHash("sha256");
     const prompts = createHash("sha256");
