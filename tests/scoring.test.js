@@ -172,8 +172,7 @@ test("review list: two prompts per flagged block, in block order", () => {
     assert.deepEqual(aAndD.recommendations, [...AREAS_TO_REVIEW.A, ...AREAS_TO_REVIEW.D]);
 });
 
-test("review list: capped at six, so block D is dropped when all four blocks are flagged", () => {
-    // Known gap of the thesis version, pinned on purpose.
+test("review list: all four flagged blocks are listed", () => {
     const r = assess("yes", {
         A1: "no", A3: "unsure",
         B1: "no", B3: "unsure",
@@ -184,7 +183,8 @@ test("review list: capped at six, so block D is dropped when all four blocks are
     assert.deepEqual(r.recommendations, [
         ...AREAS_TO_REVIEW.A,
         ...AREAS_TO_REVIEW.B,
-        ...AREAS_TO_REVIEW.C
+        ...AREAS_TO_REVIEW.C,
+        ...AREAS_TO_REVIEW.D
     ]);
 });
 
@@ -200,17 +200,17 @@ const EXPECTED = {
     yes: {
         counts: { green: 50205, yellow: 170233, red: 311003 },
         levels: "1fe6c626ed82969c9a0e1e9eeac755f52c65f4d6754152874d6598dbf3fac8f5",
-        prompts: "f561a8df424774a3133570371b318f4aeeddabd59f5dc2c15b3744b02942db2b"
+        prompts: "2aa557af3673812ed4fbd190239bb2bbccc08ba7fa646959255606e8b8887919"
     },
     unsure: {
         counts: { green: 69550, yellow: 219918, red: 241973 },
         levels: "e58cfca12c76e7f2904072cc4b8408fd0649543cf4bb801345118cbd37775b50",
-        prompts: "441d48e2b9a98d9fdd19ecd576f035e76942a19993b7f2aa38577977f7a75f03"
+        prompts: "dee7dfd9be78b88836b2b4eb2727df0f331556bdc91643b4315203299a031341"
     },
     no: {
         counts: { green: 16930, yellow: 34416, red: 7703 },
         levels: "982bd90e4361a5cfee39789b5ba2df2014a8151d2ccfbde4803ff8101e8a836b",
-        prompts: "8cc3a68e5c17fb36a48bc92012f0ba73434e00585941594d132106ba236fcb53"
+        prompts: "12c1774904d03e6fecbedd1ee0dcff8b0a95662c2aa5c25a4de08190d1759958"
     }
 };
 

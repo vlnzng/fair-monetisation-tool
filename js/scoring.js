@@ -98,13 +98,11 @@ export function runAssessment(state) {
         .map(b => b.id)
         .filter(id => blockLevels[id] === "yellow" || blockLevels[id] === "red");
 
-    // Cap the prompt list to keep the report short.
+    // Up to two prompts per flagged block (thesis appendix A.4).
     for (const b of blocksForReview) {
-        for (const r of AREAS_TO_REVIEW[b] ?? []) {
+        for (const r of (AREAS_TO_REVIEW[b] ?? []).slice(0, 2)) {
             if (!recommendations.includes(r)) recommendations.push(r);
-            if (recommendations.length >= 6) break;
         }
-        if (recommendations.length >= 6) break;
     }
 
     if (!recommendations.length) {

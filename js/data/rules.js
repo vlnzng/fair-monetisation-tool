@@ -93,7 +93,7 @@ export const HARD_TRIGGERS = [
 ];
 
 /**
- * Areas to review: intentionally sparse (max 2 per block in app.js selection).
+ * Areas to review: intentionally sparse. scoring.js lists at most two per flagged block.
  * These are prompts for review, not prescriptive fixes.
  */
 export const AREAS_TO_REVIEW = {
