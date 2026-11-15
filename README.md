@@ -89,7 +89,7 @@ python -m http.server 8080
 
 Then open http://localhost:8080. Opening `index.html` from the file system does not work, because browsers block ES modules there.
 
-Run the tests with Node 22 or newer. Nothing needs to be installed:
+Run the tests with Node 24 or newer. Nothing needs to be installed:
 
 ```
 npm test

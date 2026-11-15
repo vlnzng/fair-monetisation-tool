@@ -35,7 +35,7 @@ may be added when it clearly improves the project. Nothing unnecessary.
 
 Run locally: `python3 -m http.server 8080`, then open http://localhost:8080
 
-Run tests: `npm test` (Node 22 or newer, no dependencies). Run them after
+Run tests: `npm test` (Node 24 or newer, no dependencies). Run them after
 every change to `js/scoring.js` or `js/data/`.
 
 ## How we work
