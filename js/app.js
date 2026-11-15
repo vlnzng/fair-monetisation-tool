@@ -604,12 +604,7 @@ function printText(text) {
 
     const blob = new Blob([doc], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const w = window.open(url, "_blank", "noopener,width=900,height=700");
-    if (w) {
-        const revoke = () => URL.revokeObjectURL(url);
-        w.addEventListener("afterprint", revoke);
-        setTimeout(revoke, 15000);
-    } else {
-        URL.revokeObjectURL(url);
-    }
+    window.open(url, "_blank", "noopener,width=900,height=700");
+    // "noopener" returns no window handle, so release the URL once the new window had time to load it.
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
