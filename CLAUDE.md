@@ -29,10 +29,13 @@ may be added when it clearly improves the project. Nothing unnecessary.
 | `js/data/rules.js`     | Thresholds, multipliers, hard triggers, review prompts |
 | `js/utils.js`          | Small helpers                                          |
 | `tests/scoring.test.js`| Tests that pin the scoring behaviour                   |
+| `package.json`         | Test script only, no dependencies                      |
+| `.vercelignore`        | Keeps dev files out of the deployment                  |
+| `.github/workflows/`   | Runs the tests on push to `main` and on pull requests  |
 
 Run locally: `python3 -m http.server 8080`, then open http://localhost:8080
 
-Run tests: `npm test` (Node 20 or newer, no dependencies). Run them after
+Run tests: `npm test` (Node 22 or newer, no dependencies). Run them after
 every change to `js/scoring.js` or `js/data/`.
 
 ## How we work
@@ -88,10 +91,14 @@ Examples:
 
 ## Open points (not decided yet)
 
-- Multipliers are rounded per question, so the 1.10 factors have almost no effect.
-- The overall rules in `app.js` (one elevated domain makes the result elevated,
-  two moderate domains make it at least moderate) are not documented.
-- Inter is loaded from Google Fonts. Self-host it.
+- Multipliers are rounded per question, so the 1.10 factors never change the overall
+  result. The formula in thesis appendix A.3 has no rounding. Decide together with the thresholds.
+- Thesis section 8.2 names misleading limited-time claims as a hard trigger.
+  The code has only one hard trigger (child-directed urging, D1).
 - Review prompts are tied to the domain, not to the question that triggered them.
-- Navigation is hidden below 920px without a replacement.
-- Footer has no link to legal notice and privacy policy.
+- Answer options are `div role="button"` around radio inputs without a group label,
+  and keyboard focus is lost when the question blocks re-render.
+- The URL hash is removed on load, so links to a section do not work from outside.
+- Smooth scrolling ignores `prefers-reduced-motion`.
+- No Content-Security-Policy yet. The print window uses inline script and style.
+- The repository has no licence file.
