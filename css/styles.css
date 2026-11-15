@@ -1,3 +1,12 @@
+/* Inter, latin subset, variable weight. Weights above 700 render as 700. */
+@font-face{
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: url("../assets/fonts/inter-latin.woff2") format("woff2");
+}
+
 :root{
     --bg: #0b0f14;
     --panel: #111826;

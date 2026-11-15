@@ -6,7 +6,7 @@ A dependency-free web prototype built for academic research to provide a traffic
 - HTML, CSS, and ES-module JavaScript (no frameworks)
 - Structured question set and rules in `js/data`
 - Favicon: own design (`assets/favicon.ico`)
-- Typography: Inter from Google Fonts
+- Typography: Inter, self-hosted in `assets/fonts` (SIL Open Font License)
 
 ## Running locally
 - Use a local static server so ES modules load correctly (for example: `python -m http.server 8080` and open `http://localhost:8080/`).
