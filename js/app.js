@@ -167,12 +167,11 @@ function renderContextStep(state, { onContextChanged } = {}) {
             checked: current === opt.value,
             onchange: e => {
                 state.context.minors = e.target.value;
-                if (e.target.value === "no") {
-                    // Clear minors-specific answers when minors are out of scope.
-                    Object.keys(state.answers)
-                        .filter(key => key.startsWith("D"))
-                        .forEach(key => delete state.answers[key]);
-                }
+                // Drop answers to questions that are no longer asked in this context.
+                const asked = new Set(getUiQuestions(state).map(q => q.id));
+                Object.keys(state.answers)
+                    .filter(id => !asked.has(id))
+                    .forEach(id => delete state.answers[id]);
                 onContextChanged?.();
             }
         });
