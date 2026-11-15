@@ -17,6 +17,8 @@ export const CONTEXT_OPTIONS = {
  * Context multipliers: mild calibration only.
  * - minorsMultiplier affects D block
  * - pressureMultiplier affects C block
+ * scoring.js rounds every weighted answer to a whole number,
+ * so the 1.10 factors never change the overall result.
  */
 export function contextModifiers(context) {
     const minors = context?.minors ?? CONTEXT_DEFAULTS.minors;
@@ -33,9 +35,8 @@ export function contextModifiers(context) {
 }
 
 /**
- * Levels used by app.js:
- * - mapLevel returns "green" | "yellow" | "red"
- * - app uses LEVELS[level].label and LEVELS[level].summary
+ * Concern levels. mapLevel returns "green" | "yellow" | "red",
+ * app.js shows LEVELS[level].label and LEVELS[level].summary.
  */
 export const LEVELS = {
     green: {
@@ -53,12 +54,10 @@ export const LEVELS = {
 };
 
 /**
- * Thresholds tuned so that:
- * - One isolated “No” typically stays green overall.
- * - Moderate overall requires either higher total or multiple domains.
- * - Elevated overall requires substantial accumulation or hard triggers.
- *
- * Note: overall logic is implemented in app.js (see patch below).
+ * Overall thresholds for the total score, tuned so that one isolated “No”
+ * stays green. runAssessment in scoring.js then raises the result:
+ * - a hard trigger or one red block makes it red
+ * - two yellow blocks make it at least yellow
  */
 export const THRESHOLDS = {
     greenMax: 10,
@@ -69,7 +68,7 @@ export const BLOCK_THRESHOLDS = {
     // With 3 questions per block:
     // - one "No" (2–3) stays green
     // - two "No" often becomes yellow
-    // - strong minors signal can push higher
+    // - D1 "No" alone (5–6) is already yellow
     A: { greenMax: 3, yellowMax: 6 },
     B: { greenMax: 3, yellowMax: 6 },
     C: { greenMax: 3, yellowMax: 6 },
