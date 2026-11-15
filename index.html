@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fair Monetisation Risk Assessment Tool</title>
+  <meta name="description" content="A web-based, risk-oriented assessment tool for monetisation UX in video games." />
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+
+  <!-- Typography (optional external dependency; falls back to system fonts if blocked/offline) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#assessment">Skip to assessment</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">
+        <a class="brand" href="index.html" aria-label="Back to start">
+          <div class="brand-title">Fair Monetisation Risk Assessment Tool</div>
+        </a>
+        <div class="brand-subtitle">UX screening for video game monetisation</div>
+      </div>
+    </div>
+
+    <nav class="site-nav" aria-label="Page navigation">
+      <a href="#why">Purpose</a>
+      <a href="#assessment">Assessment</a>
+      <a href="#criteria">Criteria</a>
+      <a href="#meaning">Interpretation</a>
+      <a href="#limitations">Scope</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero section">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <h1>Spot fairness and consumer protection risks in video game monetisation design.</h1>
+        <p class="lead">
+          A guided assessment that flags recurring issues in transparency, consent, decision pressure, and minor-related safeguards.
+          The outcome highlights areas that should be reviewed and documented during the design and iteration processes.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#assessment">Start assessment</a>
+          <a class="btn btn-secondary" href="#criteria">View criteria</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="panel-head">
+          <div class="panel-title">Risk Assessment Tool</div>
+          <p class="panel-subtitle"></p>
+        </div>
+
+        <div class="panel-row panel-row-kpis">
+          <div class="panel-kpi">
+            <div class="kpi-value">4</div>
+            <div class="kpi-label">Risk domains</div>
+          </div>
+          <div class="panel-kpi">
+            <div class="kpi-value">12</div>
+            <div class="kpi-label">Guided questions</div>
+          </div>
+        </div>
+
+        <div class="panel-pills" role="list" aria-label="Concern levels">
+          <div class="pill pill-green" role="listitem">Minimal concern</div>
+          <div class="pill pill-yellow" role="listitem">Moderate concern</div>
+          <div class="pill pill-red" role="listitem">Elevated concern</div>
+        </div>
+
+        <div class="panel-footnote">
+          Outputs reflect consumer-protection risk signals.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="why" class="section">
+    <div class="container">
+      <h2>Purpose</h2>
+      <p class="section-intro">
+        Why the tool exists and how it is intended to be used.
+      </p>
+
+      <div class="why-grid">
+        <div class="card">
+          <h3>Rationale</h3>
+          <p>Design choices shape how prices, offers, and safeguards are perceived and used.</p>
+        </div>
+        <div class="card">
+          <h3>Intended users</h3>
+          <p>For indie teams and UX specialists who need a structured basis for discussion and documentation without specialised legal expertise.</p>
+        </div>
+        <div class="card">
+          <h3>What it checks</h3>
+          <p>Real-money price transparency, consent and transaction control, decision pressure cues, and minor-related safeguards.</p>
+        </div>
+        <div class="card">
+          <h3>Where it helps</h3>
+          <p>Early-stage flow design, reviews of live-ops changes, and lightweight reporting for internal alignment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="assessment" class="section">
+    <div class="container">
+      <h2>Assessment</h2>
+      <p class="section-intro">
+        A guided flow from context to questions, producing a concern orientation.
+      </p>
+
+      <div class="assessment-shell" data-assessment-host>
+        <div class="assessment-head">
+          <div class="head-copy">
+            <div class="assessment-title" data-step-title>Context</div>
+            <div class="assessment-meta" data-step-meta>Step 1 of 3</div>
+          </div>
+
+          <div class="progress" role="presentation">
+            <div class="progress-bar" data-progress></div>
+          </div>
+        </div>
+
+        <div class="assessment-body" data-step></div>
+
+        <div class="assessment-nav">
+          <div class="assessment-nav-left">
+            <button class="btn btn-secondary" type="button" data-prev>Back</button>
+            <button class="btn btn-secondary" type="button" data-reset>Reset</button>
+          </div>
+          <button class="btn btn-primary" type="button" data-next>Next</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="criteria" class="section">
+    <div class="container">
+      <h2>Criteria reference</h2>
+      <p class="section-intro">
+        The domains and observable indicators the assessment is grounded in.
+      </p>
+
+      <div class="accordion">
+        <details class="details" open>
+          <summary>A) Price transparency and virtual currency clarity</summary>
+          <p>
+            The assessment checks whether users can understand the real-money cost at the moment of decision,
+            including where virtual currencies are used. Risk increases where real-money equivalence is absent,
+            hidden behind additional steps, or distorted through layered conversions or systematically misaligned bundles.
+          </p>
+        </details>
+
+        <details class="details">
+          <summary>B) Consent and transaction control</summary>
+          <p>
+            This domain covers whether the purchase journey supports deliberate consent and user control.
+            It focuses on explicit confirmation before charging, symmetry between opting in and opting out,
+            clear disclosure of recurring commitments, and practical access to refunds, withdrawal, and complaint pathways.
+          </p>
+        </details>
+
+        <details class="details">
+          <summary>C) Choice architecture and decision pressure</summary>
+          <p>
+            The assessment examines whether choices are presented neutrally and whether pressure signals are used responsibly.
+            It flags misleading labels, hidden refusal options, repeated prompting after refusal, and urgency cues that can
+            reduce deliberation or materially impair voluntary choice.
+          </p>
+        </details>
+
+        <details class="details">
+          <summary>D) Minors and safeguards</summary>
+          <p>
+            Where minors are plausibly exposed, consumer-protection sensitivity increases.
+            This domain therefore checks for child-directed urging and the presence of meaningful default safeguards,
+            such as purchase confirmations, parental controls, or spending limits.
+          </p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="meaning" class="section">
+    <div class="container">
+      <h2>What the result means</h2>
+      <p class="section-intro">
+        How to interpret concern levels and use them responsibly.
+      </p>
+
+      <div class="meaning-grid">
+        <div class="meaning-card" data-level="green">
+          <h3>Minimal concern</h3>
+          <p>Few indicators are present, or they appear in clarity-preserving forms. Decision-point transparency and user control remain the primary considerations.</p>
+        </div>
+        <div class="meaning-card" data-level="yellow">
+          <h3>Moderate concern</h3>
+          <p>Some indicators suggest avoidable ambiguity, pressure cues, or asymmetric friction. The flagged domains merit review, and mitigation choices should be documented.</p>
+        </div>
+        <div class="meaning-card" data-level="red">
+          <h3>Elevated concern</h3>
+          <p>Multiple indicators co-occur, or higher-severity signals are present. The flagged domains should be prioritised for review, and mitigation should be considered before release.</p>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Interpretation note:</strong> The results depend on the context and indicator combinations. They do not certify compliance or fairness.
+      </div>
+    </div>
+  </section>
+
+  <section id="limitations" class="section">
+    <div class="container">
+      <h2>Scope and limitations</h2>
+      <p class="section-intro">
+        What the assessment covers and what it cannot conclude.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>What it covers</h3>
+          <ul class="bullets">
+            <li>Monetisation-related UX decision points assessable from interface and interaction design</li>
+            <li>Mechanisms affecting transparency, consent, and decision pressure</li>
+            <li>Minors-related sensitivity and the presence of practical safeguards</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>What it does not cover</h3>
+          <ul class="bullets">
+            <li>Full legal compliance assessment under all jurisdictional interpretations</li>
+            <li>Longitudinal player outcomes or causal harm measurement</li>
+            <li>Non-observable practices such as personalised targeting, dynamic pricing, or experimentation logic</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col">
+      <div class="footer-title">Fair Monetisation Risk Assessment Tool</div>
+      <div class="footer-note">Developed for academic research and demonstration.</div>
+      <br>
+      <div class="footer-note">By Valentin Lenzing · 2026</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-title">References</div>
+      <ul class="footer-links">
+        <li><a href="https://commission.europa.eu/document/download/8af13e88-6540-436c-b137-9853e7fe866a_en?filename=Key+principles+on+in-game+virtual+currencies.pdf" target="_blank" rel="noreferrer">CPC Key Principles (virtual currencies)</a></li>
+        <li><a href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/10/dark-commercial-patterns_9f6169cd/44f5e846-en.pdf" target="_blank" rel="noreferrer">OECD Dark Commercial Patterns</a></li>
+        <li><a href="https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng" target="_blank" rel="noreferrer">EU Digital Service Act</a></li>
+        <li><a href="https://eur-lex.europa.eu/eli/dir/2005/29/oj/eng" target="_blank" rel="noreferrer">EU Unfair Commercial Practices Directive</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-title">Disclaimer</div>
+      <div class="footer-note">For research and educational use; not legal advice.</div>
+      <div class="footer-note">Results are indicative signals, not evidence of compliance or fairness.</div>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
