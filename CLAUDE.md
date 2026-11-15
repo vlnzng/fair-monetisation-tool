@@ -46,13 +46,17 @@ every change to `js/scoring.js` or `js/data/`.
 - One topic per change. Keep diffs small. Do not touch files outside the task.
 - If code and documentation disagree, say so instead of silently fixing one of them.
 - Code comments: short, and only where the code does not explain itself.
+- This is a showcase project on its way to 2.0. Clear and clean beats perfect.
+  Small problems can wait for the next clean-up.
+- The README may name logic, sections and sources from the thesis.
+  Clarity and references come first.
 
 ## Git
 
-- Claude prepares the changes, splits them into commits and commits them
-  on a working branch, never directly on `main`.
-- Never run `git push`, `git tag` or anything that rewrites history.
-  Valentin reviews, merges, pushes and tags.
+- Claude prepares the changes, splits them into commits and commits them on `main`.
+  A separate `dev` branch only if Valentin asks for one.
+- Push only after Valentin has approved the commits.
+- Never run `git tag` or anything that rewrites history. Valentin tags.
 - After committing, summarise each commit in one to three lines.
 - No attribution lines of any kind (no Co-Authored-By, no "Generated with").
 
