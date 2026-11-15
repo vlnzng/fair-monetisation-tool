@@ -206,6 +206,12 @@ function renderContextStep(state, { onContextChanged } = {}) {
         );
     });
 
+    const help = renderHelp(
+        state,
+        "context",
+        "If minors are a relevant audience segment, the assessment increases sensitivity for child-directed prompting, safeguards, and clarity of purchase information."
+    );
+
     return el("div", { class: "assessment-grid" }, [
         el("div", { class: "card" }, [
             el("h3", {}, ["Context flag"]),
@@ -213,12 +219,13 @@ function renderContextStep(state, { onContextChanged } = {}) {
                 "The context flag is set to adjust the sensitivity of indicators related to minors."
             ]),
             el("div", { class: "q-card" }, [
-                el("div", { class: "q-title" }, [
-                    "Are minors an intended or relevant audience segment for the product (e.g., by design, marketing, or distribution)?"
+                el("div", { class: "q-title-row" }, [
+                    el("div", { class: "q-title" }, [
+                        "Are minors an intended or relevant audience segment for the product (e.g., by design, marketing, or distribution)?"
+                    ]),
+                    help.button
                 ]),
-                el("p", { class: "q-help not-visible" }, [
-                    "If minors are a relevant audience segment, the assessment increases sensitivity for child-directed prompting, safeguards, and clarity of purchase information."
-                ]),
+                help.text,
                 el("div", { class: "choice-row" }, items)
             ])
         ]),
@@ -419,10 +426,7 @@ function renderBlock(blockId, questions, state, onAnswer) {
     const items = questions.map(q => {
         const current = state.answers[q.id] ?? null;
 
-        const helpId = `${q.id}_help`;
-        const helpText = q.help
-            ? el("p", { class: `q-help${state.helpOpen[q.id] ? " is-visible" : ""}`, id: helpId }, [q.help])
-            : null;
+        const help = renderHelp(state, q.id, q.help);
 
         const radios = ["yes", "no", "unsure"].map(v => {
             const id = `${q.id}_${v}`;
@@ -466,27 +470,9 @@ function renderBlock(blockId, questions, state, onAnswer) {
         return el("div", { class: "q-card", "data-qid": q.id }, [
             el("div", { class: "q-title-row" }, [
                 el("div", { class: "q-title" }, [q.text]),
-                q.help
-                    ? el(
-                        "button",
-                        {
-                            class: "info-btn",
-                            type: "button",
-                            "aria-label": "Toggle guidance",
-                            "aria-controls": helpId,
-                            "aria-expanded": state.helpOpen[q.id] ? "true" : "false",
-                            onclick: (e) => {
-                                const visible = !state.helpOpen[q.id];
-                                state.helpOpen[q.id] = visible;
-                                helpText?.classList.toggle("is-visible", visible);
-                                e.currentTarget.setAttribute("aria-expanded", visible ? "true" : "false");
-                            }
-                        },
-                        ["i"]
-                    )
-                    : null
+                help.button
             ]),
-            helpText,
+            help.text,
             el("div", { class: "choice-row" }, radios)
         ]);
     });
@@ -495,6 +481,33 @@ function renderBlock(blockId, questions, state, onAnswer) {
         el("h3", {}, [name]),
         ...items
     ]);
+}
+
+// Info button and the help text it toggles. The open state is kept across re-renders.
+function renderHelp(state, key, helpText) {
+    if (!helpText) return { button: null, text: null };
+
+    const helpId = `${key}_help`;
+    const text = el("p", { class: `q-help${state.helpOpen[key] ? " is-visible" : ""}`, id: helpId }, [helpText]);
+    const button = el(
+        "button",
+        {
+            class: "info-btn",
+            type: "button",
+            "aria-label": "Toggle guidance",
+            "aria-controls": helpId,
+            "aria-expanded": state.helpOpen[key] ? "true" : "false",
+            onclick: (e) => {
+                const visible = !state.helpOpen[key];
+                state.helpOpen[key] = visible;
+                text.classList.toggle("is-visible", visible);
+                e.currentTarget.setAttribute("aria-expanded", visible ? "true" : "false");
+            }
+        },
+        ["i"]
+    );
+
+    return { button, text };
 }
 
 function groupByBlock(questions) {
