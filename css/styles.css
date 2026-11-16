@@ -256,6 +256,7 @@ textarea{
 }
 .choice input{ margin-right:8px; }
 .choice:hover{ border-color: rgba(147,197,253,.35); }
+.choice:has(input:checked){ border-color: var(--accent-border); background: var(--accent-soft); }
 /* The whole answer shows the focus ring instead of the small radio inside it. */
 .choice:has(input:focus-visible){ outline: 2px solid var(--focus); outline-offset: 2px; }
 .choice:has(input:focus-visible) input{ outline:none; }
