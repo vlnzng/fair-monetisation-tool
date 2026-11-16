@@ -70,6 +70,9 @@ In the code, severities live in `js/data/questions.js`, thresholds and factors i
   - The footer links to the legal notice and the privacy policy.
   - The areas to review list two prompts for every flagged block.
   - The help text of the context question can be opened, and the answer to D1 survives a change of context.
+  - The answers are native radio groups named after their question. Keyboard focus stays in place while answering and moves to the step title on a step change.
+  - The report is printed from the page, without a pop-up window.
+  - Smooth scrolling and transitions are switched off when the system asks for reduced motion.
   - The scoring has its own module and is covered by tests.
 
 ## Project structure
