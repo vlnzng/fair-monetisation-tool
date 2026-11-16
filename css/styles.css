@@ -52,7 +52,7 @@ body{
 }
 
 a{ color:inherit; text-decoration:none; }
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible{
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, .assessment-title:focus-visible{
     outline: 2px solid var(--focus);
     outline-offset: 2px;
 }

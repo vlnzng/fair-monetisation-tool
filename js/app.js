@@ -40,9 +40,13 @@ function initAssessment() {
     // Step order: context -> questions -> summary.
     const steps = [renderContextStep, renderQuestionsStep, renderResultsStep];
 
-    const setStep = (i) => {
+    // After a step change the assessment scrolls into view and the step title takes the focus.
+    const setStep = (i, { focus = true } = {}) => {
         state.step = clamp(i, 0, steps.length - 1);
         render();
+        if (!focus) return;
+        host.scrollIntoView({ block: "start" });
+        stepTitle?.focus({ preventScroll: true });
     };
 
     const render = () => {
@@ -118,24 +122,19 @@ function initAssessment() {
         if (state.step === steps.length - 1) {
             resetState(state);
             setStep(0);
-            host.scrollIntoView({ behavior: "smooth", block: "start" });
             return;
         }
 
         setStep(state.step + 1);
-        if (state.step === steps.length - 1) {
-            host.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
     });
 
     btnReset?.addEventListener("click", () => {
         resetState(state);
         setStep(0);
         if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-        host.scrollIntoView({ behavior: "smooth", block: "start" });
     });
 
-    setStep(0);
+    setStep(0, { focus: false });
 }
 
 function resetState(state) {
