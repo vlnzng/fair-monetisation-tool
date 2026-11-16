@@ -223,58 +223,24 @@ function renderQuestionsStep(state, { onQuestionsCompletenessChanged } = {}) {
     root.appendChild(blocksWrap);
     root.appendChild(lockNote);
 
-    // Keep the viewport anchored to the same question when blocks re-render.
-    const preserveViewportAround = (qid, fn) => {
-        const beforeEl = qid ? document.querySelector(`[data-qid="${qid}"]`) : null;
-        const beforeTop = beforeEl ? beforeEl.getBoundingClientRect().top : null;
-        fn();
-        if (!qid || beforeTop == null) return;
-        const afterEl = document.querySelector(`[data-qid="${qid}"]`);
-        if (!afterEl) return;
-        const afterTop = afterEl.getBoundingClientRect().top;
-        const delta = afterTop - beforeTop;
-        window.scrollBy({ top: delta, left: 0, behavior: "auto" });
+    const groups = groupByBlock(getQuestions(state));
+    const blockIds = BLOCKS.map(b => b.id).filter(id => groups[id]?.length);
+    const isComplete = (blockId) => groups[blockId].every(q => q.id in state.answers);
+    let shown = 0;
+
+    // Progressive reveal: a block is added once the blocks before it are answered.
+    // Blocks already on the page are not re-rendered, so keyboard focus stays where it is.
+    const update = () => {
+        while (shown < blockIds.length && (shown === 0 || isComplete(blockIds[shown - 1]))) {
+            const blockId = blockIds[shown++];
+            blocksWrap.appendChild(renderBlock(blockId, groups[blockId], state, update));
+        }
+
+        lockNote.hidden = shown === blockIds.length;
+        onQuestionsCompletenessChanged?.(blockIds.every(isComplete));
     };
 
-    // Progressive reveal: show one block at a time until it is fully answered.
-    const updateBlocks = (anchorQid = null) => {
-        preserveViewportAround(anchorQid, () => {
-            const uiQuestions = getQuestions(state);
-            const groups = groupByBlock(uiQuestions);
-            const orderedBlockIds = BLOCKS.map(b => b.id);
-            const visibleBlocks = [];
-
-            const isBlockComplete = (blockId) => {
-                const qs = groups[blockId] ?? [];
-                if (!qs.length) return true;
-                return qs.every(q => q.id in state.answers);
-            };
-
-            let locked = false;
-            for (const blockId of orderedBlockIds) {
-                const qs = groups[blockId] ?? [];
-                if (!qs.length) continue;
-                if (locked) break;
-
-                visibleBlocks.push(
-                    renderBlock(blockId, qs, state, (qidJustAnswered) => updateBlocks(qidJustAnswered))
-                );
-
-                if (!isBlockComplete(blockId)) locked = true;
-            }
-
-            blocksWrap.replaceChildren(...visibleBlocks);
-
-            const hasHidden = orderedBlockIds.some(b => (groups[b]?.length ?? 0) > 0) && locked;
-            lockNote.style.display = hasHidden ? "" : "none";
-
-            const missing = uiQuestions.map(q => q.id).filter(id => !(id in state.answers));
-            const complete = uiQuestions.length > 0 && missing.length === 0;
-            onQuestionsCompletenessChanged?.(complete);
-        });
-    };
-
-    updateBlocks();
+    update();
     return root;
 }
 
@@ -386,7 +352,7 @@ function renderBlock(blockId, questions, state, onAnswer) {
         const help = renderHelp(state, q.id, q.help, titleId);
         const choices = renderChoices(q.id, ["yes", "no", "unsure"], state.answers[q.id], titleId, value => {
             state.answers[q.id] = value;
-            onAnswer?.(q.id);
+            onAnswer?.();
         });
 
         return el("div", { class: "q-card", "data-qid": q.id }, [
