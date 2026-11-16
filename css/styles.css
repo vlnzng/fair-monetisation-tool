@@ -381,6 +381,20 @@ textarea{
 .meaning-card[data-level="yellow"]{ border-color: rgba(251,191,36,.45); background: rgba(251,191,36,.08); }
 .meaning-card[data-level="red"]{ border-color: rgba(239,68,68,.45); background: rgba(239,68,68,.08); }
 
+/* Print export: app.js adds .print-report to the body, and only that is printed. */
+.print-report{ display:none; }
+@media print{
+    @page{ margin:18mm; }
+    body:has(> .print-report){ background:#fff; color:#000; }
+    body:has(> .print-report) > *{ display:none; }
+    body > .print-report{
+        display:block;
+        margin:0;
+        white-space:pre-wrap;
+        font: 11pt/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+}
+
 @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior:auto; }
     .progress-bar, .action-status{ transition:none; }

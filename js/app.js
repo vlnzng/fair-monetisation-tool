@@ -480,41 +480,12 @@ function flashStatus(node, msg, ok) {
     }, 1800);
 }
 
+// Prints the report from this page. While .print-report exists,
+// the print styles hide everything else.
 function printText(text) {
-    const esc = (s) =>
-        String(s)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-
-    const doc = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Assessment report</title>
-  <style>
-    @page { margin: 18mm; }
-    html, body { background:#fff; color:#000; }
-    body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    pre { white-space: pre-wrap; font-size: 11pt; line-height: 1.45; margin: 0; }
-  </style>
-</head>
-<body>
-  <pre>${esc(text)}</pre>
-  <script>
-    window.addEventListener('load', () => {
-      window.focus();
-      window.print();
-    });
-  </script>
-</body>
-</html>`;
-
-    const blob = new Blob([doc], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank", "noopener,width=900,height=700");
-    // "noopener" returns no window handle, so release the URL once the new window had time to load it.
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    document.querySelector(".print-report")?.remove();
+    const report = el("pre", { class: "print-report" }, [text]);
+    document.body.appendChild(report);
+    window.addEventListener("afterprint", () => report.remove(), { once: true });
+    window.print();
 }
