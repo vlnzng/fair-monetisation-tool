@@ -100,9 +100,9 @@ Examples:
 - Thesis section 8.2 names misleading limited-time claims as a hard trigger.
   The code has only one hard trigger (child-directed urging, D1).
 - Review prompts are tied to the domain, not to the question that triggered them.
-- Answer options are `div role="button"` around radio inputs without a group label,
-  and keyboard focus is lost when the question blocks re-render.
+- With minors = no, D1 = no does not fire the hard trigger. Block D then reaches
+  moderate at most, and the overall result can stay minimal.
 - The URL hash is removed on load, so links to a section do not work from outside.
-- Smooth scrolling ignores `prefers-reduced-motion`.
-- No Content-Security-Policy yet. The print window uses inline script and style.
+- No Content-Security-Policy yet.
+- Answers are lost on reload. Keeping them in `sessionStorage` would be a new feature.
 - The repository has no licence file.
