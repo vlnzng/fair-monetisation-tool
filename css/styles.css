@@ -331,6 +331,7 @@ textarea{
 .footer-col{ display:flex; flex-direction:column; gap:6px; }
 .footer-title{ font-weight:800; margin-bottom:2px; }
 .footer-note{ color:var(--muted); }
+.footer-byline{ margin-top:30px; }
 .footer-links{ margin:4px 0 0; padding-left:18px; color:var(--muted); }
 .footer-links a{ color:var(--muted); text-decoration: underline; text-decoration-color: rgba(232,238,247,0.35); }
 .footer-links a:hover{ color:var(--text); text-decoration-color: rgba(232,238,247,0.55); }
