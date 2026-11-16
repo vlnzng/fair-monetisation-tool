@@ -21,8 +21,10 @@ export function getQuestions(state) {
 }
 
 export function runAssessment(state) {
+    const answers = state?.answers ?? {};
+    const context = state?.context;
     const relevant = getQuestions(state);
-    const mods = contextModifiers(state.context);
+    const mods = contextModifiers(context);
 
     const blockTotals = {};
     for (const b of BLOCKS) blockTotals[b.id] = 0;
@@ -30,7 +32,7 @@ export function runAssessment(state) {
     let total = 0;
 
     for (const q of relevant) {
-        const ans = state.answers[q.id];
+        const ans = answers[q.id];
         const base = q.severity?.[ans] ?? 0;
 
         let weighted = base;
@@ -48,7 +50,7 @@ export function runAssessment(state) {
     const triggers = [];
     let hardElevate = false;
     for (const t of HARD_TRIGGERS) {
-        if (t.match(state.answers, state.context)) {
+        if (t.match(answers, context)) {
             triggers.push(t.description);
             hardElevate = true;
         }

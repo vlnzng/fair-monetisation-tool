@@ -164,6 +164,14 @@ test("a missing context is scored like unsure", () => {
     assert.equal(r.triggers.length, 1);
 });
 
+test("a state without answers or context does not throw", () => {
+    const expected = runAssessment({ context: { minors: "unsure" }, answers: {} });
+    assert.equal(expected.overallLevel, "green");
+    assert.deepEqual(runAssessment({}), expected);
+    assert.deepEqual(runAssessment({ context: { minors: "unsure" } }), expected);
+    assert.deepEqual(runAssessment(undefined), expected);
+});
+
 test("review list: two prompts per flagged block, in block order", () => {
     const onlyA = assess("no", { A1: "no", A3: "unsure" });
     assert.deepEqual(onlyA.recommendations, AREAS_TO_REVIEW.A);
