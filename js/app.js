@@ -147,60 +147,27 @@ function resetState(state) {
 }
 
 function renderContextStep(state, { onContextChanged } = {}) {
-    const current = state.context.minors;
-
-    const items = CONTEXT_OPTIONS.minors.map(opt => {
-        const id = `ctx_minors_${opt.value}`;
-        const input = el("input", {
-            type: "radio",
-            name: "ctx_minors",
-            id,
-            value: opt.value,
-            checked: current === opt.value,
-            onchange: e => {
-                state.context.minors = e.target.value;
-                // Drop answers to questions that are no longer asked in this context.
-                const asked = new Set(getQuestions(state).map(q => q.id));
-                Object.keys(state.answers)
-                    .filter(id => !asked.has(id))
-                    .forEach(id => delete state.answers[id]);
-                onContextChanged?.();
-            }
-        });
-
-        const shortLabel =
-            opt.value === "yes" ? "Yes" :
-                opt.value === "no" ? "No" :
-                    "Unsure";
-
-        const label = el("label", { htmlFor: id }, [shortLabel]);
-
-        return el(
-            "div",
-            {
-                class: "choice",
-                role: "button",
-                tabIndex: 0,
-                onclick: () => {
-                    input.checked = true;
-                    input.dispatchEvent(new Event("change", { bubbles: true }));
-                },
-                onkeydown: e => {
-                    if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        input.checked = true;
-                        input.dispatchEvent(new Event("change", { bubbles: true }));
-                    }
-                }
-            },
-            [input, label]
-        );
-    });
+    const choices = renderChoices(
+        "ctx_minors",
+        CONTEXT_OPTIONS.minors.map(opt => opt.value),
+        state.context.minors,
+        "context_title",
+        value => {
+            state.context.minors = value;
+            // Drop answers to questions that are no longer asked in this context.
+            const asked = new Set(getQuestions(state).map(q => q.id));
+            Object.keys(state.answers)
+                .filter(id => !asked.has(id))
+                .forEach(id => delete state.answers[id]);
+            onContextChanged?.();
+        }
+    );
 
     const help = renderHelp(
         state,
         "context",
-        "If minors are a relevant audience segment, the assessment increases sensitivity for child-directed prompting, safeguards, and clarity of purchase information."
+        "If minors are a relevant audience segment, the assessment increases sensitivity for child-directed prompting, safeguards, and clarity of purchase information.",
+        "context_title"
     );
 
     return el("div", { class: "assessment-grid" }, [
@@ -211,13 +178,13 @@ function renderContextStep(state, { onContextChanged } = {}) {
             ]),
             el("div", { class: "q-card" }, [
                 el("div", { class: "q-title-row" }, [
-                    el("div", { class: "q-title" }, [
+                    el("div", { class: "q-title", id: "context_title" }, [
                         "Are minors an intended or relevant audience segment for the product (e.g., by design, marketing, or distribution)?"
                     ]),
                     help.button
                 ]),
                 help.text,
-                el("div", { class: "choice-row" }, items)
+                choices
             ])
         ]),
         el("div", { class: "helper-card" }, [
@@ -415,56 +382,20 @@ function renderBlock(blockId, questions, state, onAnswer) {
     const name = BLOCKS.find(b => b.id === blockId)?.name ?? blockId;
 
     const items = questions.map(q => {
-        const current = state.answers[q.id] ?? null;
-
-        const help = renderHelp(state, q.id, q.help);
-
-        const radios = ["yes", "no", "unsure"].map(v => {
-            const id = `${q.id}_${v}`;
-            const input = el("input", {
-                type: "radio",
-                name: q.id,
-                id,
-                value: v,
-                checked: current === v,
-                onchange: e => {
-                    state.answers[q.id] = e.target.value;
-                    onAnswer?.(q.id);
-                }
-            });
-
-            const labelText = v === "yes" ? "Yes" : v === "no" ? "No" : "Unsure";
-            const label = el("label", { htmlFor: id }, [labelText]);
-
-            return el(
-                "div",
-                {
-                    class: "choice",
-                    role: "button",
-                    tabIndex: 0,
-                    onclick: () => {
-                        input.checked = true;
-                        input.dispatchEvent(new Event("change", { bubbles: true }));
-                    },
-                    onkeydown: e => {
-                        if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            input.checked = true;
-                            input.dispatchEvent(new Event("change", { bubbles: true }));
-                        }
-                    }
-                },
-                [input, label]
-            );
+        const titleId = `${q.id}_title`;
+        const help = renderHelp(state, q.id, q.help, titleId);
+        const choices = renderChoices(q.id, ["yes", "no", "unsure"], state.answers[q.id], titleId, value => {
+            state.answers[q.id] = value;
+            onAnswer?.(q.id);
         });
 
         return el("div", { class: "q-card", "data-qid": q.id }, [
             el("div", { class: "q-title-row" }, [
-                el("div", { class: "q-title" }, [q.text]),
+                el("div", { class: "q-title", id: titleId }, [q.text]),
                 help.button
             ]),
             help.text,
-            el("div", { class: "choice-row" }, radios)
+            choices
         ]);
     });
 
@@ -474,18 +405,40 @@ function renderBlock(blockId, questions, state, onAnswer) {
     ]);
 }
 
+const CHOICE_LABELS = { yes: "Yes", no: "No", unsure: "Unsure" };
+
+// Native radios inside their labels, grouped under the question text.
+function renderChoices(name, values, current, titleId, onChange) {
+    const items = values.map(value => {
+        const input = el("input", {
+            type: "radio",
+            name,
+            value,
+            checked: current === value,
+            onchange: () => onChange(value)
+        });
+        return el("label", { class: "choice" }, [input, CHOICE_LABELS[value]]);
+    });
+
+    return el("div", { class: "choice-row", role: "radiogroup", "aria-labelledby": titleId }, items);
+}
+
 // Info button and the help text it toggles. The open state is kept across re-renders.
-function renderHelp(state, key, helpText) {
+// The button is named after its question: "Guidance for" plus the question text.
+function renderHelp(state, key, helpText, titleId) {
     if (!helpText) return { button: null, text: null };
 
     const helpId = `${key}_help`;
+    const buttonId = `${key}_help_button`;
     const text = el("p", { class: `q-help${state.helpOpen[key] ? " is-visible" : ""}`, id: helpId }, [helpText]);
     const button = el(
         "button",
         {
             class: "info-btn",
             type: "button",
-            "aria-label": "Toggle guidance",
+            id: buttonId,
+            "aria-label": "Guidance for",
+            "aria-labelledby": `${buttonId} ${titleId}`,
             "aria-controls": helpId,
             "aria-expanded": state.helpOpen[key] ? "true" : "false",
             onclick: (e) => {

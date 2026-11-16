@@ -52,7 +52,7 @@ body{
 }
 
 a{ color:inherit; text-decoration:none; }
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible, .choice:focus-visible{
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible{
     outline: 2px solid var(--focus);
     outline-offset: 2px;
 }
@@ -256,6 +256,9 @@ textarea{
 }
 .choice input{ margin-right:8px; }
 .choice:hover{ border-color: rgba(147,197,253,.35); }
+/* The whole answer shows the focus ring instead of the small radio inside it. */
+.choice:has(input:focus-visible){ outline: 2px solid var(--focus); outline-offset: 2px; }
+.choice:has(input:focus-visible) input{ outline:none; }
 
 .q-card{
     border:1px solid var(--border);
