@@ -2,3 +2,6 @@
 .DS_Store
 .vercel
 .claude/settings.local.json
+
+# Local working files: v2 spec, mockups, thesis. Not part of the repository.
+docs/
