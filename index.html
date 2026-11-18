@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fair Monetisation Risk Assessment Tool</title>
-  <meta name="description" content="A web-based, risk-oriented assessment tool for monetisation UX in video games." />
+  <meta name="description" content="Check a purchase flow in your game for dark patterns and EU consumer rules, in about two minutes." />
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link rel="preload" href="assets/fonts/instrument-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/instrument-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
@@ -12,263 +12,268 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-<a class="skip-link" href="#assessment">Skip to assessment</a>
+<a class="skip-link" href="#tool">Skip to the check</a>
 
-<header class="site-header">
-  <div class="container header-inner">
-    <a class="brand" href="./">
-      <div class="brand-mark" aria-hidden="true"></div>
-      <div class="brand-text">
-        <div class="brand-title">Fair Monetisation Risk Assessment Tool</div>
-        <div class="brand-subtitle">UX screening for video game monetisation</div>
-      </div>
-    </a>
-
-    <nav class="site-nav" aria-label="Page navigation">
-      <a href="#why">Purpose</a>
-      <a href="#assessment">Assessment</a>
-      <a href="#criteria">Criteria</a>
-      <a href="#meaning">Interpretation</a>
-      <a href="#limitations">Scope</a>
+<div class="night">
+  <header class="container site-header">
+    <span class="site-name">Fair Monetisation Risk Assessment Tool</span>
+    <nav class="site-nav" aria-label="Page">
+      <a href="#why">Why it exists</a>
+      <a href="#background">Background</a>
+      <a href="#method">Method</a>
     </nav>
-  </div>
-</header>
+  </header>
+</div>
 
 <main>
-  <section class="hero section">
-    <div class="container hero-inner">
+  <section class="night hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
       <div class="hero-copy">
-        <h1>Spot fairness and consumer protection risks in video game monetisation design.</h1>
-        <p class="lead">
-          A guided assessment that flags recurring issues in transparency, consent, decision pressure, and minor-related safeguards.
-          The outcome highlights areas that should be reviewed and documented during the design and iteration processes.
-        </p>
+        <h1 id="hero-title">Is your game shop<br>fair to players?</h1>
+        <p class="hero-lead text-lead">Check a purchase flow in your game for dark patterns and EU consumer rules, in about two minutes.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#assessment">Start assessment</a>
-          <a class="btn btn-secondary" href="#criteria">View criteria</a>
+          <a class="btn btn--on-night" href="#tool">Start the check</a>
+          <a class="hero-link" href="#tool">See an example result</a>
         </div>
+        <p class="hero-note text-meta">Research prototype from a master's thesis, revised one year on. Not legal advice.</p>
       </div>
 
-      <div class="hero-panel">
-        <div class="panel-head">
-          <div class="panel-title">Risk Assessment Tool</div>
-        </div>
-
-        <div class="panel-row panel-row-kpis">
-          <div class="panel-kpi">
-            <div class="kpi-value">4</div>
-            <div class="kpi-label">Risk domains</div>
+      <figure class="offer">
+        <div class="offer-body">
+          <div class="offer-card-wrap" aria-hidden="true">
+            <div class="offer-card">
+              <div class="offer-row">
+                <span class="offer-muted">Limited skin</span>
+                <span class="offer-timer" data-target="1">Ends in 09:59</span>
+                <span class="offer-marker offer-marker--1">1</span>
+              </div>
+              <div class="offer-art">
+                <svg width="56" height="44" viewBox="0 0 56 44" focusable="false"><path d="M4 30 Q16 6 28 18 Q40 6 52 30 L44 26 L40 38 L28 30 L16 38 L12 26 Z" /></svg>
+              </div>
+              <div class="offer-row offer-row--price">
+                <span class="offer-item">
+                  <span class="offer-item-name">Frost Dragon</span>
+                  <span class="offer-item-balance">You have 950 Gems</span>
+                </span>
+                <span class="offer-price-wrap">
+                  <span class="offer-price" data-target="2">1,200 Gems</span>
+                  <span class="offer-euro">about €12</span>
+                </span>
+                <span class="offer-marker offer-marker--2">2</span>
+              </div>
+              <span class="offer-buy">Buy now</span>
+              <span class="offer-decline-wrap">
+                <span class="offer-decline" data-target="3">no thanks</span>
+                <span class="offer-marker offer-marker--3">3</span>
+              </span>
+            </div>
           </div>
-          <div class="panel-kpi">
-            <div class="kpi-value">12</div>
-            <div class="kpi-label">Guided questions</div>
+
+          <ol class="offer-notes" aria-label="Three dark patterns in this offer">
+            <li class="offer-note" data-note="1">
+              <span class="offer-note-number" aria-hidden="true">1</span>
+              <span class="offer-note-text">
+                <span class="offer-note-title">A countdown</span>
+                <span class="offer-note-line">Time pressure leaves less room to think it over.</span>
+                <span class="offer-note-pattern">False urgency</span>
+              </span>
+            </li>
+            <li class="offer-note" data-note="2">
+              <span class="offer-note-number" aria-hidden="true">2</span>
+              <span class="offer-note-text">
+                <span class="offer-note-title">A price in Gems</span>
+                <span class="offer-note-line">The euro amount is hidden behind a second currency.</span>
+                <span class="offer-note-pattern">Currency masking</span>
+              </span>
+            </li>
+            <li class="offer-note" data-note="3">
+              <span class="offer-note-number" aria-hidden="true">3</span>
+              <span class="offer-note-text">
+                <span class="offer-note-title">A tiny "no thanks"</span>
+                <span class="offer-note-line">Declining is made harder to see than buying.</span>
+                <span class="offer-note-pattern">Uneven choice</span>
+              </span>
+            </li>
+          </ol>
+        </div>
+        <figcaption class="offer-caption text-meta">A sketched offer, not a real game. Each note is one thing the check asks about.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="why" class="section why" aria-labelledby="why-title">
+    <div class="container split">
+      <h2 id="why-title">Why this exists</h2>
+      <div class="why-content">
+        <div class="why-text prose">
+          <p>Many game shops make buying easier than deciding. Prices hide behind currencies, offers run on countdowns, and children are asked to pay.</p>
+          <p>EU law covers much of this, but it is written for lawyers. This tool turns it into plain questions about what a player sees.</p>
+        </div>
+        <details class="disclosure why-more">
+          <summary>Who it is for and what it is not</summary>
+          <div class="why-columns">
+            <div class="why-column">
+              <h3 class="text-h3">One flow at a time</h3>
+              <p class="text-small text-muted">From shop screen to confirmation, judged by what the interface shows.</p>
+            </div>
+            <div class="why-column">
+              <h3 class="text-h3">For game teams</h3>
+              <p class="text-small text-muted">Designers, developers and producers. No legal background needed.</p>
+            </div>
+            <div class="why-column">
+              <h3 class="text-h3">Not a legal verdict</h3>
+              <p class="text-small text-muted">It shows where a closer look is worth it, not what is legal.</p>
+            </div>
           </div>
-        </div>
-
-        <div class="panel-pills" role="list" aria-label="Concern levels">
-          <div class="pill pill-green" role="listitem">Minimal concern</div>
-          <div class="pill pill-yellow" role="listitem">Moderate concern</div>
-          <div class="pill pill-red" role="listitem">Elevated concern</div>
-        </div>
-
-        <div class="panel-footnote">
-          Outputs reflect consumer-protection risk signals.
-        </div>
+        </details>
+        <a class="text-link text-small" href="https://valentinlenzing.com/work/fair-monetisation/">Read the project case study</a>
       </div>
     </div>
   </section>
 
-  <section id="why" class="section">
+  <section id="tool" class="section section--tool tool" aria-labelledby="tool-title">
     <div class="container">
-      <h2>Purpose</h2>
-      <p class="section-intro">
-        Why the tool exists and how it is intended to be used.
-      </p>
-
-      <div class="why-grid">
-        <div class="card">
-          <h3>Rationale</h3>
-          <p>Design choices shape how prices, offers, and safeguards are perceived and used.</p>
-        </div>
-        <div class="card">
-          <h3>Intended users</h3>
-          <p>For indie teams and UX specialists who need a structured basis for discussion and documentation without specialised legal expertise.</p>
-        </div>
-        <div class="card">
-          <h3>What it checks</h3>
-          <p>Real-money price transparency, consent and transaction control, decision pressure cues, and minor-related safeguards.</p>
-        </div>
-        <div class="card">
-          <h3>Where it helps</h3>
-          <p>Early-stage flow design, reviews of live-ops changes, and lightweight reporting for internal alignment.</p>
-        </div>
+      <div class="tool-head">
+        <h2 id="tool-title">Check a flow</h2>
+        <p class="text-small text-muted">One flow per run. If something is not visible, choose Unsure.</p>
       </div>
+      <div class="tool-app" data-tool></div>
     </div>
   </section>
 
-  <section id="assessment" class="section">
+  <section id="background" class="section background" aria-labelledby="background-title">
     <div class="container">
-      <h2>Assessment</h2>
-      <p class="section-intro">
-        A guided flow from context to questions, producing a concern orientation.
-      </p>
+      <div class="split background-head">
+        <h2 id="background-title">Where this comes from</h2>
+        <p class="text-muted prose">The tool joined a debate that was already moving. The past year made it more relevant.</p>
+      </div>
 
-      <div class="assessment-shell" data-assessment-host>
-        <div class="assessment-head">
-          <div class="head-copy">
-            <div class="assessment-title" data-step-title tabindex="-1">Context</div>
-            <div class="assessment-meta" data-step-meta>Step 1 of 3</div>
-          </div>
-
-          <div class="progress" role="presentation">
-            <div class="progress-bar" data-progress></div>
-          </div>
+      <div class="background-columns">
+        <div class="timeline">
+          <h3 class="text-h3">The starting point</h3>
+          <ol class="timeline-list">
+            <li><span class="timeline-date">Sep 2024</span><span>Consumer groups file an EU-wide complaint about in-game currencies.</span></li>
+            <li><span class="timeline-date">Oct 2024</span><span>A Commission review finds gaps in online consumer protection.</span></li>
+            <li><span class="timeline-date">Mar 2025</span><span>EU authorities publish key principles on virtual currencies.</span></li>
+          </ol>
         </div>
 
-        <div class="assessment-body" data-step></div>
+        <div class="thesis-card night">
+          <span class="thesis-date text-small">Jan 2026</span>
+          <h3 class="text-h3">The thesis</h3>
+          <p class="thesis-text">My master's thesis at TH Brandenburg turned these rules into a self-check for game teams: four areas, twelve questions, three levels. This version is the revision one year on.</p>
+          <a class="text-link text-small" href="https://valentinlenzing.com/work/fair-monetisation/">How it was built</a>
+        </div>
 
-        <div class="assessment-nav">
-          <div class="assessment-nav-left">
-            <button class="btn btn-secondary" type="button" data-prev>Back</button>
-            <button class="btn btn-secondary" type="button" data-reset>Reset</button>
-          </div>
-          <button class="btn btn-primary" type="button" data-next>Next</button>
+        <div class="timeline">
+          <h3 class="text-h3">Since then</h3>
+          <ol class="timeline-list">
+            <li><span class="timeline-date">Jun 2026</span><span>PEGI starts weighing monetisation in its age ratings.</span></li>
+            <li><span class="timeline-date">Sep 2026</span><span>EU authorities take action against nine game companies.</span></li>
+            <li><span class="timeline-date">Nov 2026</span><span>The Commission proposes the Digital Fairness Act.</span></li>
+          </ol>
         </div>
       </div>
+
+      <p class="background-ahead text-small text-muted">Ahead: Parliament and Council debate the Digital Fairness Act in 2027, so it may still change. Results mark these points as a proposal.</p>
     </div>
   </section>
 
-  <section id="criteria" class="section">
-    <div class="container">
-      <h2>Criteria reference</h2>
-      <p class="section-intro">
-        The domains and observable indicators the assessment is grounded in.
-      </p>
+  <section id="method" class="section night method" aria-labelledby="method-title">
+    <div class="container split">
+      <div class="method-head">
+        <h2 id="method-title">Method and limits</h2>
+        <p class="text-small method-sub">For anyone who wants to know how the result comes about.</p>
+      </div>
 
-      <div class="accordion">
-        <details class="details" open>
-          <summary>A) Price transparency and virtual currency clarity</summary>
-          <p>
-            The assessment checks whether users can understand the real-money cost at the moment of decision,
-            including where virtual currencies are used. Risk increases where real-money equivalence is absent,
-            hidden behind additional steps, or distorted through layered conversions or systematically misaligned bundles.
-          </p>
+      <div class="method-list">
+        <details class="accordion">
+          <summary><h3 class="text-h3">How levels are worked out</h3></summary>
+          <div class="accordion-body">
+            <ol class="method-steps">
+              <li><span class="method-step-number" aria-hidden="true">1</span><span><strong>Each answer counts.</strong> Yes counts nothing, Unsure a little, No the most. Some questions weigh more than others.</span></li>
+              <li><span class="method-step-number" aria-hidden="true">2</span><span><strong>Under-18s raise the stakes.</strong> If young players are in the audience, answers about offers and protection count more.</span></li>
+              <li><span class="method-step-number" aria-hidden="true">3</span><span><strong>Every area gets a level.</strong> Minimal, Moderate or Elevated, based on the answers in that area.</span></li>
+              <li><span class="method-step-number" aria-hidden="true">4</span><span><strong>The overall level follows the areas.</strong> One Elevated area makes the result Elevated. Two Moderate areas make it at least Moderate. Many smaller points can add up as well.</span></li>
+              <li><span class="method-step-number" aria-hidden="true">5</span><span><strong>One answer decides on its own.</strong> An offer that tells children to buy, or to ask an adult, always sets Elevated.</span></li>
+            </ol>
+            <ul class="level-tags" aria-label="The three levels">
+              <li class="level-tag" data-level="minimal"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Minimal</li>
+              <li class="level-tag" data-level="moderate"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Moderate</li>
+              <li class="level-tag" data-level="elevated"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>Elevated</li>
+            </ul>
+            <a class="text-link text-small" href="https://github.com/vlnzng/fair-monetisation-tool#how-the-result-is-calculated">Full method in the repository</a>
+          </div>
         </details>
 
-        <details class="details">
-          <summary>B) Consent and transaction control</summary>
-          <p>
-            This domain covers whether the purchase journey supports deliberate consent and user control.
-            It focuses on explicit confirmation before charging, symmetry between opting in and opting out,
-            clear disclosure of recurring commitments, and practical access to refunds, withdrawal, and complaint pathways.
-          </p>
+        <details class="accordion">
+          <summary><h3 class="text-h3">Scope and limits</h3></summary>
+          <div class="accordion-body scope">
+            <div>
+              <p class="scope-title">It looks at</p>
+              <ul class="plain-list">
+                <li>Prices and virtual currencies</li>
+                <li>Confirming, cancelling and refunds</li>
+                <li>Pressure in offers</li>
+                <li>Protection of under-18s</li>
+                <li>Paid random items</li>
+              </ul>
+            </div>
+            <div>
+              <p class="scope-title">It leaves out</p>
+              <ul class="plain-list">
+                <li>Anything behind the interface, such as data or targeting</li>
+                <li>Game design beyond buying, such as engagement loops</li>
+                <li>Personalised prices</li>
+                <li>Whether a flow is legal</li>
+              </ul>
+            </div>
+          </div>
         </details>
 
-        <details class="details">
-          <summary>C) Choice architecture and decision pressure</summary>
-          <p>
-            The assessment examines whether choices are presented neutrally and whether pressure signals are used responsibly.
-            It flags misleading labels, hidden refusal options, repeated prompting after refusal, and urgency cues that can
-            reduce deliberation or materially impair voluntary choice.
-          </p>
+        <details class="accordion">
+          <summary><h3 class="text-h3">What changed in the tool</h3></summary>
+          <div class="accordion-body">
+            <ul class="plain-list">
+              <li>Plainer questions, each with an example</li>
+              <li>Three new questions: pay-to-win and paid random items</li>
+              <li>A first step that leaves out what your flow does not have</li>
+              <li>Every result line traces back to an answer</li>
+              <li>Four fixes to the scoring, documented in the repository</li>
+            </ul>
+          </div>
         </details>
-
-        <details class="details">
-          <summary>D) Minors and safeguards</summary>
-          <p>
-            Where minors are plausibly exposed, consumer-protection sensitivity increases.
-            This domain therefore checks for child-directed urging and the presence of meaningful default safeguards,
-            such as purchase confirmations, parental controls, or spending limits.
-          </p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <section id="meaning" class="section">
-    <div class="container">
-      <h2>What the result means</h2>
-      <p class="section-intro">
-        How to interpret concern levels and use them responsibly.
-      </p>
-
-      <div class="meaning-grid">
-        <div class="meaning-card" data-level="green">
-          <h3>Minimal concern</h3>
-          <p>Few indicators are present, or they appear in clarity-preserving forms. Decision-point transparency and user control remain the primary considerations.</p>
-        </div>
-        <div class="meaning-card" data-level="yellow">
-          <h3>Moderate concern</h3>
-          <p>Some indicators suggest avoidable ambiguity, pressure cues, or asymmetric friction. The flagged domains merit review, and mitigation choices should be documented.</p>
-        </div>
-        <div class="meaning-card" data-level="red">
-          <h3>Elevated concern</h3>
-          <p>Multiple indicators co-occur, or higher-severity signals are present. The flagged domains should be prioritised for review, and mitigation should be considered before release.</p>
-        </div>
-      </div>
-      <div class="callout">
-        <strong>Interpretation note:</strong> The results depend on the context and indicator combinations. They do not certify compliance or fairness.
-      </div>
-    </div>
-  </section>
-
-  <section id="limitations" class="section">
-    <div class="container">
-      <h2>Scope and limitations</h2>
-      <p class="section-intro">
-        What the assessment covers and what it cannot conclude.
-      </p>
-
-      <div class="grid-2">
-        <div class="card">
-          <h3>What it covers</h3>
-          <ul class="bullets">
-            <li>Monetisation-related UX decision points assessable from interface and interaction design</li>
-            <li>Mechanisms affecting transparency, consent, and decision pressure</li>
-            <li>Minors-related sensitivity and the presence of practical safeguards</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>What it does not cover</h3>
-          <ul class="bullets">
-            <li>Full legal compliance assessment under all jurisdictional interpretations</li>
-            <li>Longitudinal player outcomes or causal harm measurement</li>
-            <li>Non-observable practices such as personalised targeting, dynamic pricing, or experimentation logic</li>
-          </ul>
-        </div>
       </div>
     </div>
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="container footer-grid">
-    <div class="footer-col">
-      <div class="footer-title">Fair Monetisation Risk Assessment Tool</div>
-      <div class="footer-note">Developed for academic research and demonstration.</div>
-      <div class="footer-note footer-byline">By Valentin Lenzing · 2026</div>
-      <ul class="footer-links">
+<footer class="night site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <span class="footer-name">Fair Monetisation Risk Assessment Tool</span>
+        <span class="text-small">By Valentin Lenzing. Questions as of November 2026, not updated continuously.</span>
+        <span class="text-small">No cookies, no tracking, nothing loaded from other servers.</span>
+      </div>
+      <div class="footer-sources">
+        <h2 class="footer-label" id="sources-title">Sources</h2>
+        <ul id="sources" class="footer-source-list" aria-labelledby="sources-title">
+          <li><a href="https://commission.europa.eu/live-work-travel-eu/consumer-rights-and-complaints/enforcement-consumer-protection/coordinated-actions/social-media-online-games-and-search-engines_en">Key principles on in-game virtual currencies, CPC network, 2025</a></li>
+          <li><a href="https://eur-lex.europa.eu/eli/dir/2005/29/oj">Unfair Commercial Practices Directive, Directive 2005/29/EC</a></li>
+          <li><a href="https://eur-lex.europa.eu/eli/dir/2011/83/oj">Consumer Rights Directive, Directive 2011/83/EU</a></li>
+          <li><a href="https://ec.europa.eu/commission/presscorner/detail/en/ip_26_2407">Digital Fairness Act, Commission proposal, 2026</a></li>
+          <li><a href="https://better-internet-for-kids.europa.eu/sites/default/files/2026-06/PEGI%20briefing%2025-06.pdf">PEGI age rating criteria, 2026</a></li>
+        </ul>
+      </div>
+      <ul class="footer-links" aria-label="More">
+        <li><a href="https://valentinlenzing.com">Portfolio</a></li>
+        <li><a href="https://github.com/vlnzng/fair-monetisation-tool">Repository</a></li>
         <li><a href="https://valentinlenzing.com/imprint/">Legal notice</a></li>
-        <li><a href="https://valentinlenzing.com/privacy/">Privacy policy</a></li>
+        <li><a href="https://valentinlenzing.com/privacy/">Privacy</a></li>
       </ul>
-    </div>
-    <div class="footer-col">
-      <div class="footer-title">References</div>
-      <ul class="footer-links">
-        <li><a href="https://commission.europa.eu/document/download/8af13e88-6540-436c-b137-9853e7fe866a_en?filename=Key+principles+on+in-game+virtual+currencies.pdf" target="_blank" rel="noreferrer">CPC Key Principles (virtual currencies)</a></li>
-        <li><a href="https://www.oecd.org/content/dam/oecd/en/publications/reports/2022/10/dark-commercial-patterns_9f6169cd/44f5e846-en.pdf" target="_blank" rel="noreferrer">OECD Dark Commercial Patterns</a></li>
-        <li><a href="https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng" target="_blank" rel="noreferrer">EU Digital Service Act</a></li>
-        <li><a href="https://eur-lex.europa.eu/eli/dir/2005/29/oj/eng" target="_blank" rel="noreferrer">EU Unfair Commercial Practices Directive</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <div class="footer-title">Disclaimer</div>
-      <div class="footer-note">For research and educational use; not legal advice.</div>
-      <div class="footer-note">Results are indicative signals, not evidence of compliance or fairness.</div>
     </div>
   </div>
 </footer>
-
-<script type="module" src="js/app.js"></script>
 </body>
 </html>
