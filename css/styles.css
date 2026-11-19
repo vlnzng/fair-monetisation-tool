@@ -270,11 +270,15 @@ input {
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .btn--primary { background: var(--ink); color: var(--surface); }
 .btn--primary:hover { background: color-mix(in srgb, var(--ink) 90%, transparent); }
+
+/* Primary step button while questions of the step are open. Still a working button. */
+.btn--primary.is-waiting,
+.btn--primary.is-waiting:hover { background: var(--line); color: var(--muted); }
 
 .btn--secondary { background: var(--surface); color: var(--ink); border: 1.5px solid var(--ink); }
 .btn--secondary:hover { background: var(--selected); }

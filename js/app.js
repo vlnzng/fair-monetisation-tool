@@ -241,7 +241,7 @@ function renderAbout() {
     const refresh = () => {
         count.replaceChildren(...countText());
         root.querySelector(".progress")?.replaceWith(renderProgress());
-        root.querySelector(".step-next").textContent = primaryLabel();
+        updateNext();
     };
 
     const k1Field = el("fieldset", { class: "question", "data-question": "k1", "aria-describedby": "k1-hint" }, [
@@ -343,6 +343,7 @@ function renderArea(key) {
                 state.answers[q.id] = code;
                 clearMissing(q.id);
                 root.querySelector(".progress")?.replaceWith(renderProgress());
+                updateNext();
             }),
             el("details", { class: "disclosure" }, [
                 el("summary", {}, ["Show an example"]),
@@ -362,13 +363,22 @@ function isLastArea(key) {
 }
 
 function renderFooter({ start = null, showBack = false, primary }) {
+    const waiting = openQuestions().length > 0;
     return el("div", { class: "step-footer" }, [
         showBack ? el("button", { class: "btn btn--secondary step-back", type: "button", onclick: back }, ["Back"]) : start,
         el("div", { class: "step-footer-main" }, [
             el("p", { class: "step-status text-small", "aria-live": "polite", "data-status": "" }),
-            el("button", { class: "btn btn--primary step-next", type: "button", onclick: next }, [primary])
+            el("button", { class: `btn btn--primary step-next${waiting ? " is-waiting" : ""}`, type: "button", onclick: next }, [primary])
         ])
     ]);
+}
+
+// The primary button stays usable while questions are open, but looks quiet until
+// the step is answered. Pressing it early shows what is missing (spec 6.6).
+function updateNext() {
+    const button = root.querySelector(".step-next");
+    button.textContent = primaryLabel();
+    button.classList.toggle("is-waiting", openQuestions().length > 0);
 }
 
 // ---- Validation ---------------------------------------------------------------
