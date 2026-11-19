@@ -17,7 +17,7 @@ function reason({ k1, k2 = [], no = [], unsure = [] }) {
 test("reason: hard trigger", () => {
     assert.deepEqual(reason({ k1: "y", no: ["C1", "D1", "D3"] }), [
         "One answer sets this result.",
-        "The offer tells children to buy or to ask an adult. EU law bans this outright."
+        "Your answer to \"Do offers stay neutral towards children?\" was No. EU law bans telling children to buy."
     ]);
 });
 

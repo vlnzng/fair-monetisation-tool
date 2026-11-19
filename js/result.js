@@ -3,7 +3,7 @@ import { AREAS } from "./data/areas.js";
 import { SOURCES } from "./data/sources.js";
 import { EXAMPLES } from "./data/examples.js";
 import { runAssessment } from "./scoring.js";
-import { LEVEL_WORDS, ANSWER_WORDS, AS_OF, includesText, reasonLines } from "./report.js";
+import { LEVEL_WORDS, ANSWER_WORDS, AS_OF, TRIGGER_QUESTION, includesText, reasonLines } from "./report.js";
 import { sketch } from "./sketches.js";
 import { el, externalLink } from "./utils.js";
 
@@ -52,7 +52,7 @@ export function renderResult(state, { title, link, actions }) {
         ]),
         el("div", { class: "overall-reason" }, [
             el("p", { class: "text-h4" }, [reason]),
-            el("p", { class: "text-small" }, [detail])
+            el("p", { class: "text-small" }, reasonDetail(detail, result.hardTrigger))
         ])
     ]);
 
@@ -86,6 +86,22 @@ export function renderResult(state, { title, link, actions }) {
         // Set as textContent, so the printed link has no word joiners and copies cleanly.
         el("p", { class: "print-only print-link", textContent: link })
     ]);
+}
+
+// With the hard trigger, the quoted question links to its entry (spec 7.3). The link scrolls and
+// moves focus without changing the URL, so the result fragment stays.
+function reasonDetail(detail, hardTrigger) {
+    if (!hardTrigger) return [detail];
+    const [before, after] = detail.split(TRIGGER_QUESTION);
+    return [before, el("a", {
+        href: "#entry-D1",
+        onclick: e => {
+            e.preventDefault();
+            const entry = document.getElementById("entry-D1");
+            entry.scrollIntoView({ block: "start" });
+            entry.focus({ preventScroll: true });
+        }
+    }, [TRIGGER_QUESTION]), after];
 }
 
 // Shown only while an example is loaded (spec 7.1).
@@ -147,7 +163,8 @@ function renderEntries(result, actions) {
 function renderEntry(entry, result, actions) {
     const { question: q, answer } = entry;
     const decides = result.hardTrigger && q.id === "D1" && answer === "n";
-    return el("article", { class: "entry" }, [
+    // The answer that sets the result is marked and is the target of the link in the reason.
+    return el("article", decides ? { class: "entry is-decisive", id: "entry-D1", tabindex: "-1" } : { class: "entry" }, [
         el("div", { class: "entry-question" }, [
             el("p", { class: "text-meta text-muted" }, [
                 "Your answer: ", answerWord(answer),

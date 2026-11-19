@@ -84,6 +84,9 @@ export function buildEntry(entry, result, link) {
     return [...entryLines(entry, result), link].join("\n");
 }
 
+// The hard trigger question, shortened, as the reason quotes it. The result links it to its entry.
+export const TRIGGER_QUESTION = "Do offers stay neutral towards children?";
+
 const COUNT_WORDS = ["None", "One", "Two", "Three", "Four", "Five"];
 
 const areaNames = keys => keys.map(k => AREAS.find(a => a.key === k).name).join(", ");
@@ -100,7 +103,7 @@ export function reasonLines(result) {
         `${COUNT_WORDS[keys.length]} ${keys.length === 1 ? "area" : "areas"} reached ${level}: ${areaNames(keys)}.`;
 
     if (result.hardTrigger) {
-        return ["One answer sets this result.", "The offer tells children to buy or to ask an adult. EU law bans this outright."];
+        return ["One answer sets this result.", `Your answer to "${TRIGGER_QUESTION}" was No. EU law bans telling children to buy.`];
     }
     if (result.overall === "elevated") {
         return elevated.length
