@@ -855,12 +855,11 @@ input {
 
 /* ---- Tool section -------------------------------------------------------- */
 
+/* The hint sits directly below the title, as under "Method and limits". */
 .tool-head {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--s-3) var(--s-10);
+    flex-direction: column;
+    gap: var(--s-3);
     margin-bottom: var(--s-8);
 }
 
