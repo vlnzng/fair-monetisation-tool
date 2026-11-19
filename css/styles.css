@@ -135,8 +135,17 @@ h1, h2, h3, h4, h5, legend {
     text-wrap: balance;
 }
 
-p, li {
+p {
     text-wrap: pretty;
+}
+
+/* Short texts and heading-style lines: balanced, so no single word is left alone on the last line. */
+li,
+.text-h4,
+.check-text,
+.footer-about,
+.site-name {
+    text-wrap: balance;
 }
 
 h1 {
@@ -1874,7 +1883,8 @@ input {
     margin-top: var(--s-2);
 }
 
-@media (min-width: 640px) {
+/* Two columns from 1024px. On tablets they leave too little room for label, answer and Change. */
+@media (min-width: 1024px) {
     .answer-groups {
         column-count: 2;
         column-gap: var(--s-12);
