@@ -5,7 +5,7 @@ export const SOURCES = [
         title: "Key principles on in-game virtual currencies",
         detail: "CPC network, 2025",
         status: "CPC guidance",
-        url: "https://commission.europa.eu/live-work-travel-eu/consumer-rights-and-complaints/enforcement-consumer-protection/coordinated-actions/social-media-online-games-and-search-engines_en"
+        url: "https://commission.europa.eu/document/download/8af13e88-6540-436c-b137-9853e7fe866a_en?filename=Key+principles+on+in-game+virtual+currencies.pdf"
     },
     {
         key: "ucpd",
@@ -34,5 +34,12 @@ export const SOURCES = [
         detail: "2026",
         status: null,
         url: "https://better-internet-for-kids.europa.eu/sites/default/files/2026-06/PEGI%20briefing%2025-06.pdf"
+    },
+    {
+        key: "oecd",
+        title: "Dark commercial patterns",
+        detail: "OECD Digital Economy Papers, 2022",
+        status: null,
+        url: "https://doi.org/10.1787/44f5e846-en"
     }
 ];
