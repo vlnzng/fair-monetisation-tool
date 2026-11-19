@@ -137,5 +137,5 @@ Examples:
 - No Content-Security-Policy yet.
 - The repository has no licence file.
 - From spec section 15: the mapping of questions to legal rules is not checked against
-  the legal texts; the 2026 timeline entries come from research; favicon and share image
-  are not designed; which v1.2 footer sources stay is decided in step 4.
+  the legal texts; the 2026 timeline entries and the DFA and PEGI links come from
+  research and are not checked; favicon and share image are not designed.
