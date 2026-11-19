@@ -147,7 +147,7 @@ The site is deployed on Vercel as static files from the repository root.
 - European Union (2005). [Unfair Commercial Practices Directive](https://eur-lex.europa.eu/eli/dir/2005/29/oj), Directive 2005/29/EC.
 - European Union (2011). [Consumer Rights Directive](https://eur-lex.europa.eu/eli/dir/2011/83/oj), Directive 2011/83/EU.
 - European Commission (2026). [Digital Fairness Act](https://ec.europa.eu/commission/presscorner/detail/en/ip_26_2407), Commission proposal.
-- PEGI (2026). [Age rating criteria](https://better-internet-for-kids.europa.eu/sites/default/files/2026-06/PEGI%20briefing%2025-06.pdf).
+- PEGI (2026). [Age rating criteria](https://pegi.info/news/pegi-expands-age-rating-criteria-interactive-risk-categories).
 - OECD (2022). [Dark commercial patterns](https://doi.org/10.1787/44f5e846-en). OECD Digital Economy Papers, No. 336.
 
 ## Credits

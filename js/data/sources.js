@@ -33,7 +33,7 @@ export const SOURCES = [
         title: "PEGI age rating criteria",
         detail: "2026",
         status: null,
-        url: "https://better-internet-for-kids.europa.eu/sites/default/files/2026-06/PEGI%20briefing%2025-06.pdf"
+        url: "https://pegi.info/news/pegi-expands-age-rating-criteria-interactive-risk-categories"
     },
     {
         key: "oecd",
