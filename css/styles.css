@@ -92,7 +92,7 @@
         --fs-h2: 34px;
         --fs-lead: 20px;
 
-        --gutter: max(var(--s-10), 4%);
+        --gutter: clamp(var(--s-10), 4%, var(--s-12)); /* capped, so wide screens keep the full content width */
         --section-pad: var(--s-22);
         --section-pad-tool: var(--s-18);
     }
