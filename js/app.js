@@ -280,10 +280,18 @@ function renderAbout() {
         ))
     ]);
 
+    // Same as the hero link. Left out while editing from the result, where it would replace the run.
+    const exampleLink = state.returnToResult ? null : el("a", {
+        class: "text-link text-small step-example",
+        href: "#example=currency",
+        onclick: e => { e.preventDefault(); loadExample("currency"); }
+    }, ["See an example result"]);
+
     return el("div", { class: "step-card" }, [
-        el("div", { class: "step-head" }, [
+        el("div", { class: "step-head step-head--about" }, [
             stepTitle("About this flow"),
-            el("p", { class: "text-small text-muted" }, ["Two answers decide which questions follow. Nobody reads a question that does not apply."])
+            el("p", { class: "text-small text-muted" }, ["Two answers decide which questions follow. Nobody reads a question that does not apply."]),
+            exampleLink
         ]),
         el("div", { class: "field" }, [
             el("label", { class: "field-label", for: "flow-name" }, ["Name of the flow ", el("span", { class: "field-optional" }, ["(optional)"])]),

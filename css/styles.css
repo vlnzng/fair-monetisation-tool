@@ -962,6 +962,25 @@ input {
     margin-bottom: var(--s-3);
 }
 
+/* About step: the example link sits right of the title from 640px, below the intro on mobile. */
+@media (min-width: 640px) {
+    .step-head--about {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: baseline;
+        column-gap: var(--s-6);
+    }
+
+    .step-head--about > p {
+        grid-column: 1 / -1;
+    }
+
+    .step-example {
+        grid-area: 1 / 2;
+        align-self: baseline;
+    }
+}
+
 .step-title {
     scroll-margin-top: var(--s-4);
 }
