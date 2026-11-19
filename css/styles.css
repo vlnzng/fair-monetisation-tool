@@ -893,7 +893,6 @@ input {
 
 .progress-groups {
     display: none;
-    grid-template-columns: repeat(var(--groups), minmax(0, 1fr));
     gap: var(--s-2);
     padding: 0;
     list-style: none;
@@ -902,7 +901,10 @@ input {
     color: var(--muted);
 }
 
+/* Width follows the number of segments, so all segments are equal. The basis covers the 2px
+   gaps inside the group. A group never gets narrower than the longest word of its name. */
 .progress-group {
+    flex: var(--count) 1 calc((var(--count) - 1) * 2px);
     display: flex;
     flex-direction: column;
     gap: var(--s-2);
@@ -945,7 +947,7 @@ input {
 
 @media (min-width: 640px) {
     .progress-row { display: flex; }
-    .progress-groups { display: grid; }
+    .progress-groups { display: flex; }
     .progress-compact { display: none; }
 }
 

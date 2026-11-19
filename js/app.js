@@ -209,8 +209,9 @@ function renderProgress() {
             el("span", { class: "progress-name" }, state.name ? ["Checking: ", el("strong", {}, [state.name])] : []),
             el("span", { class: "progress-position" }, [position])
         ]),
-        el("ol", { class: "progress-groups", style: `--groups: ${groups.length}` }, groups.map(g =>
-            el("li", { class: "progress-group", "aria-current": g === current ? "step" : null }, [segments(g.done), g.name])
+        // A group is as wide as its number of segments, so every question segment has the same width.
+        el("ol", { class: "progress-groups" }, groups.map(g =>
+            el("li", { class: "progress-group", style: `--count: ${g.done.length}`, "aria-current": g === current ? "step" : null }, [segments(g.done), g.name])
         )),
         el("div", { class: "progress-compact" }, [
             el("div", { class: "progress-compact-row" }, [el("strong", {}, [current.name]), el("span", {}, [short])]),
