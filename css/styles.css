@@ -127,11 +127,11 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, p, ul, ol, figure, fieldset {
+h1, h2, h3, h4, h5, h6, p, ul, ol, figure, fieldset {
     margin: 0;
 }
 
-h1, h2, h3, h4, h5, legend {
+h1, h2, h3, h4, h5, h6, legend {
     text-wrap: balance;
 }
 
@@ -1862,6 +1862,19 @@ input {
     border-top: 1px solid var(--line);
 }
 
+/* One group per area: a small heading, then its entries. */
+.entry-group-title {
+    padding-block: var(--s-6) var(--s-3);
+    font-size: var(--fs-small);
+    line-height: var(--lh-small);
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.entries-head + .entry-group .entry-group-title {
+    padding-top: var(--s-2);
+}
+
 .entry {
     display: grid;
     gap: var(--s-3);
@@ -1869,7 +1882,7 @@ input {
     border-top: 1px solid var(--line);
 }
 
-/* Mobile and tablet: meta, question, sketch, text, sources. */
+/* Mobile and tablet: meta, question, sketch, caption, text, sources. */
 .entry-question,
 .entry-text {
     display: flex;
@@ -2312,6 +2325,7 @@ input {
     .result { gap: var(--s-4); }
     .entries { border: 0; padding: 0; }
     .entry { break-inside: avoid; }
+    .entry-group-title { break-after: avoid; }
     .area-level { background: none; }
     .answer-row { grid-template-columns: 1fr auto; min-height: 0; padding-block: var(--s-1); }
     .all-answers::details-content { content-visibility: visible; }

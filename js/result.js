@@ -127,24 +127,37 @@ function renderEntries(result) {
             el("p", { class: "entries-empty" }, ["Every answer was Yes, so there is nothing to flag in this flow."])]);
     }
 
-    return el("section", { class: "entries" }, [head, ...result.entries.map(({ question: q, answer }) => {
-        const area = AREAS.find(a => a.key === q.area);
-        const decides = result.hardTrigger && q.id === "D1" && answer === "n";
-        return el("article", { class: "entry" }, [
-            el("div", { class: "entry-question" }, [
-                el("p", { class: "text-meta text-muted" }, [
-                    `${area.name}, your answer: `, answerWord(answer),
-                    decides ? el("span", { class: "entry-decides" }, [". This answer sets the result."]) : null
-                ]),
-                el("h5", { class: "text-h4" }, [q.text]),
-                el("div", { class: "entry-sketch" }, [sketch(q.id)])
+    // Grouped by area, with a small heading only for areas that have entries.
+    const groups = AREAS
+        .map(area => ({ area, entries: result.entries.filter(e => e.question.area === area.key) }))
+        .filter(g => g.entries.length);
+
+    return el("section", { class: "entries" }, [head, ...groups.map(({ area, entries }) =>
+        el("div", { class: "entry-group" }, [
+            el("h5", { class: "entry-group-title" }, [area.name]),
+            ...entries.map(entry => renderEntry(entry, result))
+        ])
+    )]);
+}
+
+function renderEntry({ question: q, answer }, result) {
+    const decides = result.hardTrigger && q.id === "D1" && answer === "n";
+    return el("article", { class: "entry" }, [
+        el("div", { class: "entry-question" }, [
+            el("p", { class: "text-meta text-muted" }, [
+                "Your answer: ", answerWord(answer),
+                decides ? el("span", { class: "entry-decides" }, [". This answer sets the result."]) : null
             ]),
-            el("div", { class: "entry-text" }, [
-                el("p", {}, [`${q.whyItMatters} ${q.expected}`]),
-                basedOn(q.sources)
-            ])
-        ]);
-    })]);
+            el("h6", { class: "text-h4" }, [q.text]),
+            el("div", { class: "entry-sketch" }, [sketch(q.id)]),
+            // Without the caption the sketch would read as a picture of the problem.
+            el("p", { class: "text-meta text-muted" }, ["How a Yes can look: ", q.example])
+        ]),
+        el("div", { class: "entry-text" }, [
+            el("p", {}, [`${q.whyItMatters} ${q.expected}`]),
+            basedOn(q.sources)
+        ])
+    ]);
 }
 
 function answerRow(label, value, target, onChange) {
