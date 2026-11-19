@@ -691,9 +691,8 @@ input {
     color: var(--on-night-body);
 }
 
-/* Mobile shows notes without the pattern name. */
+/* Same copy at every width: the pattern name shows on mobile too. */
 .offer-note-pattern {
-    display: none;
     font-size: var(--fs-sketch);
     color: var(--on-night-muted);
 }
@@ -724,8 +723,6 @@ input {
         padding-block: 0;
         border-top: 0;
     }
-
-    .offer-note-pattern { display: block; }
 }
 
 /* Hero motion (spec 11): entrance once on load, hover on pointer devices.
