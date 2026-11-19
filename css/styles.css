@@ -1886,10 +1886,6 @@ input {
     font-weight: 600;
 }
 
-.answer.is-unsure {
-    color: var(--moderate);
-}
-
 .entry-decides {
     color: var(--elevated);
     font-weight: 600;

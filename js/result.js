@@ -10,7 +10,8 @@ import { el, externalLink } from "./utils.js";
 const bars = size => el("span", { class: size === "large" ? "bars bars--large" : "bars", "aria-hidden": "true" },
     [el("i"), el("i"), el("i")]);
 
-const answerWord = code => el("strong", { class: code === "u" ? "answer is-unsure" : "answer" }, [ANSWER_WORDS[code]]);
+// Answers never take a level colour: Unsure is ink, like Yes and No.
+const answerWord = code => el("strong", { class: "answer" }, [ANSWER_WORDS[code]]);
 
 /**
  * @param state    the app state
@@ -160,12 +161,11 @@ function answerRow(label, value, target, onChange) {
 }
 
 function renderAllAnswers(state, result, onChange) {
-    const k1Word = el("strong", { class: state.k1 === "u" ? "answer is-unsure" : "answer" }, [ANSWER_WORDS[state.k1]]);
     const groups = [
         el("div", { class: "answer-group" }, [
             el("p", { class: "answer-group-title" }, ["About this flow"]),
             el("ul", {}, [
-                answerRow("Aimed at under-18s, or known to play", k1Word, "k1", onChange),
+                answerRow("Aimed at under-18s, or known to play", answerWord(state.k1), "k1", onChange),
                 answerRow("This flow includes", el("strong", { class: "answer" }, [includesText(state.k2)]), "k2", onChange)
             ])
         ])
