@@ -1,6 +1,6 @@
 // A word joiner after a hyphen inside a word keeps "Under-18" or "real-money" from breaking
 // at the hyphen. It is invisible and leaves the hyphen itself as it is.
-const keepHyphens = text => text.replace(/(?<=\w-)(?=\w)/g, "⁠");
+const keepHyphens = text => text.replace(/(?<=\w-)(?=\w)/g, "\u2060");
 
 // Creates an element. Text children become text nodes, so user and URL input is never parsed as HTML.
 export function el(tag, attrs = {}, children = []) {
