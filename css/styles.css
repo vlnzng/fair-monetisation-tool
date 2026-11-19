@@ -176,7 +176,6 @@ input {
 .text-h3    { font-size: var(--fs-h3);    line-height: var(--lh-h3);    font-weight: 600; }
 .text-h4    { font-size: var(--fs-h4);    line-height: var(--lh-h4);    font-weight: 600; }
 .text-lead  { font-size: var(--fs-lead);  line-height: var(--lh-lead); }
-.text-ui    { font-size: var(--fs-ui);    line-height: var(--lh-ui); }
 .text-small { font-size: var(--fs-small); line-height: var(--lh-small); }
 .text-meta  { font-size: var(--fs-meta);  line-height: var(--lh-meta); }
 .text-muted { color: var(--muted); }
