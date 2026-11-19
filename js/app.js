@@ -336,7 +336,7 @@ function renderArea(key) {
             el("summary", {}, ["Why we ask this"]),
             el("div", { class: "info-box" }, [el("p", { class: "text-small" }, [area.why]), sourcesLine(area.sources)])
         ]),
-        ...questions.map(q => el("fieldset", { class: "question", "data-question": q.id }, [
+        ...questions.map(q => el("fieldset", { class: "question question--example", "data-question": q.id }, [
             el("legend", { class: "text-h3" }, [q.text]),
             answerOptions(q.id, state.answers[q.id], code => {
                 edited();

@@ -1099,6 +1099,41 @@ input {
     margin-top: calc(-1 * var(--s-1));
 }
 
+/* Desktop: the example stays visible right of the question, without the disclosure (spec 6.5).
+   The box spans all rows; the last row takes its extra height, so the options stay under the legend. */
+@media (min-width: 1024px) {
+    .question--example {
+        display: grid;
+        grid-template-columns: minmax(0, 560px) minmax(288px, 1fr);
+        grid-template-rows: auto auto 1fr;
+        column-gap: var(--s-10);
+        row-gap: 0;
+        align-items: start;
+    }
+
+    .question--example > * { grid-column: 1; }
+    .question--example > legend { grid-row: 1; }
+    .question--example > .question-error { grid-row: 2; margin-top: var(--s-3); }
+    .question--example > .options { grid-row: 3; margin-top: var(--s-3); }
+
+    .question--example > .disclosure {
+        grid-column: 2;
+        grid-row: 1 / -1;
+    }
+
+    .question--example > .disclosure > summary { display: none; }
+    .question--example > .disclosure::details-content { content-visibility: visible; }
+
+    .question--example .example-box {
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: none;
+        margin: 0;
+    }
+
+    .question--example .example-box p { flex: none; }
+}
+
 /* Answer option: native radio covered by a drawn dot (spec 13). */
 .options {
     display: grid;
