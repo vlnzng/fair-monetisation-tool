@@ -91,7 +91,9 @@ Target structure for v2 (spec section 14). Until the build is done, v1.2 files m
 - Branches: `main` stays at v1.2 and is live. All v2 work happens on `dev`, where the
   page does not have to work between steps. When v2 is done, `dev` is merged into `main`.
 - Claude prepares the changes and splits them into commits by feature or task
-  (not too fine-grained), shows them to Valentin, and commits after his OK.
+  (not too fine-grained). For the v2 build steps on `dev`, Claude checks the result
+  itself (tests, browser at all widths) and commits when it passes, then reports.
+  Anything outside the build steps, and every push or merge, waits for Valentin's OK.
 - Push only after Valentin has approved the commits.
 - Never run `git tag` or anything that rewrites history. Valentin tags (`v2.0` at the end).
 - After committing, summarise each commit in one to three lines.
