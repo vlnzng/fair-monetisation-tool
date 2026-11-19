@@ -1991,6 +1991,22 @@ input {
     text-align: right;
 }
 
+/* "This flow includes": the value is listed under the label, left-aligned (spec 7.6). */
+.answer-row--stacked {
+    grid-template-columns: 1fr auto;
+}
+
+.answer-row-stack {
+    display: flex;
+    flex-direction: column;
+    padding-block: var(--s-2);
+}
+
+.answer-row--stacked .answer {
+    max-width: none;
+    text-align: left;
+}
+
 /* A button that looks like a text link (Change, Copy entry). */
 .link-button {
     min-width: 44px;

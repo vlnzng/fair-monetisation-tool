@@ -187,10 +187,10 @@ function renderEntry(entry, result, actions) {
     ]);
 }
 
-function answerRow(label, value, target, onChange) {
-    return el("li", { class: "answer-row" }, [
-        el("span", {}, [label]),
-        value,
+// stacked lists a long value under its label instead of in the answer column.
+function answerRow(label, value, target, onChange, { stacked = false } = {}) {
+    return el("li", { class: stacked ? "answer-row answer-row--stacked" : "answer-row" }, [
+        ...(stacked ? [el("span", { class: "answer-row-stack" }, [el("span", {}, [label]), value])] : [el("span", {}, [label]), value]),
         el("button", {
             class: "link-button text-meta",
             type: "button",
@@ -206,7 +206,7 @@ function renderAllAnswers(state, result, onChange) {
             el("p", { class: "answer-group-title" }, ["About this flow"]),
             el("ul", {}, [
                 answerRow("Aimed at under-18s, or known to play", answerWord(state.k1), "k1", onChange),
-                answerRow("This flow includes", el("strong", { class: "answer" }, [includesText(state.k2)]), "k2", onChange)
+                answerRow("This flow includes", el("strong", { class: "answer" }, [includesText(state.k2)]), "k2", onChange, { stacked: true })
             ])
         ])
     ];
