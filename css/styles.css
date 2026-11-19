@@ -294,6 +294,25 @@ input {
     align-self: flex-start;
 }
 
+/* Standalone links get a 44px high hit area without changing the layout (spec 12). */
+.site-nav a,
+.hero-link,
+.text-link {
+    position: relative;
+}
+
+.site-nav a::after,
+.hero-link::after,
+.text-link::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: calc(-1 * var(--s-1));
+    right: calc(-1 * var(--s-1));
+    height: max(100%, 44px);
+    transform: translateY(-50%);
+}
+
 /* Disclosure: underlined label with a chevron that turns when open. */
 .disclosure > summary {
     display: inline-flex;
@@ -448,7 +467,11 @@ input {
 
 @media (min-width: 1024px) {
     .hero { padding-block: var(--s-14) var(--s-22); }
+}
 
+/* Two columns only from 1200px: below that, text, card and notes do not fit side by side
+   and the fixed line break of the h1 would wrap a second time. */
+@media (min-width: 1200px) {
     .hero-grid {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
         align-items: center;
@@ -2154,6 +2177,21 @@ input {
 .footer-source-list a,
 .footer-links a {
     color: var(--on-night);
+}
+
+/* Touch screens: footer links become 44px rows. With a mouse the lists stay compact. */
+@media (pointer: coarse) {
+    .footer-source-list,
+    .footer-links {
+        gap: 0;
+    }
+
+    .footer-source-list a,
+    .footer-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+    }
 }
 
 @media (min-width: 640px) {
