@@ -1773,9 +1773,15 @@ input {
         border: 1px dashed var(--track);
         background: none;
     }
+
+    /* If a name wraps, the levels of a row still line up. */
+    .area-level-value {
+        margin-top: auto;
+    }
 }
 
-@media (min-width: 1024px) {
+/* Five in a row from 1200px, where every area name fits on one line (spec 12). */
+@media (min-width: 1200px) {
     .area-levels { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
