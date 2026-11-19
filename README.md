@@ -28,7 +28,7 @@ Three example results are built in: an opaque currency shop (Elevated), a high-p
 
 The full wording, examples and result texts are in `js/data/questions.js`. Which rule backs which question follows the thesis and research from November 2026. It has not been checked line by line against the legal texts, so the site shows no article numbers.
 
-Everything runs in the browser. There is no tracking, no cookie and no external request, and the answers never leave the page.
+Everything runs in the browser. There is no tracking, no cookie and no external request, and the answers never leave the browser. While the tab is open they are kept in session storage, so a reload keeps the run.
 
 ## How the result is calculated
 

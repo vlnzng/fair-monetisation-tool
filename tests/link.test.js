@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
-import { encodeFragment, decodeFragment, stateFromExample } from "../js/link.js";
+import { encodeFragment, decodeFragment, stateFromExample, readRun } from "../js/link.js";
 import { EXAMPLES } from "../js/data/examples.js";
 
 const gemShop = {
@@ -59,4 +59,35 @@ test("link: section anchors and incomplete or invalid runs are ignored", () => {
         valid.replace("k1=y", "k1=n")              // D2 to D4 are not asked for K1 = No
     ];
     for (const hash of invalid) assert.equal(decodeFragment(hash), null, hash);
+});
+
+test("reload: a stored run comes back as it was", () => {
+    const stored = JSON.parse(JSON.stringify({ ...gemShop, step: "C", returnToResult: true }));
+    assert.deepEqual(readRun(stored), { ...gemShop, step: "C", returnToResult: true });
+    assert.equal(readRun({ ...gemShop, step: "result" }).step, "result");
+
+    const partial = { step: "B", name: "", k1: "n", k2: [], answers: { A1: "y" }, example: null, returnToResult: false };
+    assert.deepEqual(readRun(partial), { ...partial, k2: [] });
+    const example = { ...stateFromExample("pass"), step: "result", returnToResult: false };
+    assert.equal(readRun(example).example, "pass");
+});
+
+test("reload: a step that does not fit falls back, an edited example becomes an own run", () => {
+    assert.equal(readRun({ ...gemShop, answers: { A1: "n" }, step: "result" }).step, "about");
+    assert.equal(readRun({ ...gemShop, step: "E" }).step, "about");
+    assert.equal(readRun({ step: "A", k1: null, k2: [], answers: {} }).step, "about");
+    assert.equal(readRun({ ...gemShop, step: "result", returnToResult: true }).returnToResult, false);
+
+    const edited = stateFromExample("currency");
+    edited.answers.A1 = "y";
+    assert.equal(readRun({ ...edited, step: "result" }).example, null);
+});
+
+test("reload: stored values that do not describe a run are ignored", () => {
+    for (const bad of [null, "text", 3, [], { ...gemShop, k1: "x" }, { ...gemShop, k2: ["vc", "vc"] },
+        { ...gemShop, k2: ["gems"] }, { ...gemShop, answers: { Z9: "y" } }, { ...gemShop, answers: { A1: "maybe" } },
+        { ...gemShop, answers: { E1: "y" } }, { ...gemShop, name: 5 }, { ...gemShop, answers: ["y"] }]) {
+        assert.equal(readRun(bad), null, JSON.stringify(bad));
+    }
+    assert.equal(readRun({ ...gemShop, name: "x".repeat(60), step: "about" }).name.length, 40);
 });

@@ -4,7 +4,7 @@ import { AREAS } from "./data/areas.js";
 import { K1, K2_OPTIONS } from "./data/questions.js";
 import { SOURCES } from "./data/sources.js";
 import { getQuestions, runAssessment } from "./scoring.js";
-import { encodeFragment, decodeFragment, stateFromExample, NAME_MAX } from "./link.js";
+import { encodeFragment, decodeFragment, stateFromExample, readRun, NAME_MAX } from "./link.js";
 import { buildReport, buildEntry } from "./report.js";
 import { initHero } from "./hero.js";
 import { renderResult } from "./result.js";
@@ -148,6 +148,31 @@ function setContext(k1, k2) {
     state.k2 = k2;
     const ids = new Set(asked().map(q => q.id));
     for (const id of Object.keys(state.answers)) if (!ids.has(id)) delete state.answers[id];
+    persist();
+}
+
+// ---- Reload -------------------------------------------------------------------
+
+// While the tab is open, the run is kept in sessionStorage, so a reload keeps it (spec 6.2).
+// Nothing leaves the browser. Without storage, as in some private windows, the tool works as before.
+const STORE_KEY = "fair-monetisation-run";
+
+function persist() {
+    const fresh = state.step === "about" && !state.name && !state.k1 && !state.k2.length;
+    try {
+        if (fresh) sessionStorage.removeItem(STORE_KEY);
+        else sessionStorage.setItem(STORE_KEY, JSON.stringify(state));
+    } catch {
+        // No storage: the run lasts until the page is left.
+    }
+}
+
+function restore() {
+    try {
+        return readRun(JSON.parse(sessionStorage.getItem(STORE_KEY)));
+    } catch {
+        return null;
+    }
 }
 
 // ---- Rendering ----------------------------------------------------------------
@@ -167,6 +192,7 @@ function render({ track = true } = {}) {
     root.replaceChildren(...(state.step === "result" ? [view] : [renderProgress(), view]));
     shown = { step: state.step, example: state.example };
     if (track) syncHistory(from);
+    persist();
 }
 
 // ---- Copy and print -------------------------------------------------------------
@@ -346,7 +372,7 @@ function renderAbout() {
                 maxlength: NAME_MAX,
                 value: state.name,
                 "aria-describedby": "flow-name-hint",
-                oninput: e => { edited(); state.name = e.target.value.slice(0, NAME_MAX); }
+                oninput: e => { edited(); state.name = e.target.value.slice(0, NAME_MAX); persist(); }
             }),
             el("p", { class: "field-hint text-meta text-muted", id: "flow-name-hint" }, ["Shown at the top of your result and report."])
         ]),
@@ -384,6 +410,7 @@ function renderArea(key) {
             answerOptions(q.id, state.answers[q.id], code => {
                 edited();
                 state.answers[q.id] = code;
+                persist();
                 clearMissing(q.id);
                 root.querySelector(".progress")?.replaceWith(renderProgress());
                 updateNext();
@@ -476,14 +503,16 @@ function init() {
     announcer = el("p", { class: "visually-hidden", role: "status" });
     root.after(announcer);
 
-    // A valid result fragment opens that result. Anything else, such as "#why", is left alone.
+    // A valid result fragment opens that result. Anything else, such as "#why", is left alone,
+    // and a run kept from before a reload comes back.
     const run = decodeFragment(location.hash);
-    if (run) Object.assign(state, freshState(), run, { step: "result" });
+    Object.assign(state, freshState(), run ? { ...run, step: "result" } : restore() ?? {});
     render({ track: false });
-    if (run) {
-        history.replaceState(null, "", `#${encodeFragment(state)}`);
-        root.scrollIntoView({ block: "start" });
-    }
+    if (state.step === "result") history.replaceState(null, "", `#${encodeFragment(state)}`);
+
+    // A shared link scrolls to its result. A reload keeps the browser's scroll position.
+    const reload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+    if (run && !reload) root.scrollIntoView({ block: "start" });
 
     // Back and forward, and fragments typed into the address bar.
     window.addEventListener("popstate", onHistory);
