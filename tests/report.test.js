@@ -6,7 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import { getQuestions, runAssessment } from "../js/scoring.js";
-import { reasonLines, buildReport } from "../js/report.js";
+import { reasonLines, buildReport, buildEntry } from "../js/report.js";
 
 function reason({ k1, k2 = [], no = [], unsure = [] }) {
     const answers = {};
@@ -136,4 +136,20 @@ test("report: without a name, without entries, and with the hard trigger", () =>
 
     const child = { k1: "y", k2: [], answers: { A1: "y", B1: "y", B3: "y", C1: "n", C2: "y", D1: "n", D2: "y", D3: "n", D4: "y" }, name: "" };
     assert.ok(buildReport(child, runAssessment(child), { date: "d", link: "L" }).includes("   Your answer: No. This answer sets the result."));
+});
+
+test("copy entry: one entry in the report form, then the link", () => {
+    const state = { k1: "n", k2: ["vc"], answers: { A1: "n", A2: "y", A3: "y", B1: "y", B3: "y", C1: "y", C2: "y", D1: "y" }, name: "" };
+    const result = runAssessment(state);
+    assert.equal(buildEntry(result.entries[0], result, "https://example.test/#k1=n"), [
+        "Is the real-money price shown next to the buy button?",
+        "Your answer: No",
+        "Prices only in Gems hide what an item costs in euros. Guidance expects the euro price next to every currency price.",
+        "Based on: Key principles on in-game virtual currencies (EU guidance), Digital Fairness Act (2026 proposal)",
+        "https://example.test/#k1=n"
+    ].join("\n"));
+
+    const child = { k1: "y", k2: [], answers: { A1: "y", B1: "y", B3: "y", C1: "y", C2: "y", D1: "n", D2: "y", D3: "y", D4: "y" }, name: "" };
+    const childResult = runAssessment(child);
+    assert.equal(buildEntry(childResult.entries[0], childResult, "L").split("\n")[1], "Your answer: No. This answer sets the result.");
 });

@@ -1968,7 +1968,7 @@ input {
     text-align: right;
 }
 
-/* A button that looks like a text link (Change). */
+/* A button that looks like a text link (Change, Copy entry). */
 .link-button {
     min-width: 44px;
     min-height: 44px;
@@ -1980,6 +1980,28 @@ input {
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
     cursor: pointer;
+}
+
+/* Copy entry sits at the end of the "Based on" line. Its 44px hit area reaches into the space
+   below the line, so the line keeps its height and the links above stay clickable. */
+.entry-copy-gap {
+    word-spacing: var(--s-2);
+}
+
+.entry-copy {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    white-space: nowrap;
+}
+
+.entry-copy::after {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: calc(-1 * var(--s-1));
+    right: calc(-1 * var(--s-1));
+    height: 44px;
 }
 
 .result-foot {

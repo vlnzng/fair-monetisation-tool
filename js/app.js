@@ -5,7 +5,7 @@ import { K1, K2_OPTIONS } from "./data/questions.js";
 import { SOURCES } from "./data/sources.js";
 import { getQuestions, runAssessment } from "./scoring.js";
 import { encodeFragment, decodeFragment, stateFromExample, NAME_MAX } from "./link.js";
-import { buildReport } from "./report.js";
+import { buildReport, buildEntry } from "./report.js";
 import { initHero } from "./hero.js";
 import { renderResult } from "./result.js";
 import { sketch } from "./sketches.js";
@@ -124,7 +124,7 @@ function render() {
         result: () => renderResult(state, {
             title: stepTitle(state.example ? "Example assessment" : "Your assessment"),
             link: resultLink(),
-            actions: { change, restart, example: loadExample, copyReport, copyLink, print: printResult }
+            actions: { change, restart, example: loadExample, copyReport, copyLink, copyEntry, print: printResult }
         })
     };
     const view = (views[state.step] ?? renderArea)(state.step);
@@ -163,6 +163,11 @@ function copyReport(button) {
 
 function copyLink(button) {
     copy(resultLink(), button, "Link copied");
+}
+
+// One entry of "Worth a closer look", in the report form, with the link to the result.
+function copyEntry(button, entry) {
+    copy(buildEntry(entry, runAssessment(state), resultLink()), button, "Entry copied");
 }
 
 // The print stylesheet shows only the result. All answers are printed opened.

@@ -17,7 +17,8 @@ const answerWord = code => el("strong", { class: "answer" }, [ANSWER_WORDS[code]
  * @param state    the app state
  * @param title    the step title element ("Your assessment" or "Example assessment")
  * @param link     the link to this result, printed at the bottom
- * @param actions  { change(target), restart(), example(key), copyReport(button), copyLink(button), print() }
+ * @param actions  { change(target), restart(), example(key), copyReport(button), copyLink(button),
+ *                   copyEntry(button, entry), print() }
  */
 export function renderResult(state, { title, link, actions }) {
     const result = runAssessment(state);
@@ -75,7 +76,7 @@ export function renderResult(state, { title, link, actions }) {
         head,
         overall,
         areas,
-        renderEntries(result),
+        renderEntries(result, actions),
         renderAllAnswers(state, result, actions.change),
         el("div", { class: "result-foot" }, [
             el("p", { class: "text-small text-muted" }, [`This result reflects what is visible in the interface and EU rules as of ${AS_OF}. It is an assessment, not a legal verdict.`]),
@@ -105,17 +106,20 @@ function renderExampleBar(current, actions) {
     ]);
 }
 
-function basedOn(keys) {
+function basedOn(keys, after = null) {
     const parts = [];
     keys.forEach((key, i) => {
         const s = SOURCES.find(x => x.key === key);
         if (i > 0) parts.push(" and ");
-        parts.push(externalLink(s.url, s.title), ` (${s.status})`);
+        // The status stays on one line: "(2026 proposal)", never "(2026" / "proposal)".
+        parts.push(externalLink(s.url, s.title), ` (${s.status.replaceAll(" ", " ")})`);
     });
-    return el("p", { class: "text-meta text-muted" }, ["Based on ", ...parts]);
+    // A wide space before the button, not a margin, so it leaves no indent when the button wraps.
+    const gap = after ? el("span", { class: "entry-copy-gap" }, [" "]) : null;
+    return el("p", { class: "text-meta text-muted" }, ["Based on ", ...parts, gap, after]);
 }
 
-function renderEntries(result) {
+function renderEntries(result, actions) {
     const n = result.entries.length;
     const head = el("div", { class: "entries-head" }, n
         ? [el("h4", { class: "entries-title" }, ["Worth a closer look ", el("span", { class: "text-muted" }, [`(${n})`])]),
@@ -135,12 +139,13 @@ function renderEntries(result) {
     return el("section", { class: "entries" }, [head, ...groups.map(({ area, entries }) =>
         el("div", { class: "entry-group" }, [
             el("h5", { class: "entry-group-title" }, [area.name]),
-            ...entries.map(entry => renderEntry(entry, result))
+            ...entries.map(entry => renderEntry(entry, result, actions))
         ])
     )]);
 }
 
-function renderEntry({ question: q, answer }, result) {
+function renderEntry(entry, result, actions) {
+    const { question: q, answer } = entry;
     const decides = result.hardTrigger && q.id === "D1" && answer === "n";
     return el("article", { class: "entry" }, [
         el("div", { class: "entry-question" }, [
@@ -155,7 +160,12 @@ function renderEntry({ question: q, answer }, result) {
         ]),
         el("div", { class: "entry-text" }, [
             el("p", {}, [`${q.whyItMatters} ${q.expected}`]),
-            basedOn(q.sources)
+            basedOn(q.sources, el("button", {
+                class: "link-button text-meta entry-copy",
+                type: "button",
+                "aria-label": `Copy entry: ${q.text}`,
+                onclick: e => actions.copyEntry(e.currentTarget, entry)
+            }, ["Copy entry"]))
         ])
     ]);
 }

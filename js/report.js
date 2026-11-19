@@ -41,18 +41,9 @@ export function buildReport(state, result, { date, link }) {
 
     lines.push(`Worth a closer look (${result.entries.length})`);
     if (!result.entries.length) lines.push("Every answer was Yes, so there is nothing to flag in this flow.");
-    result.entries.forEach(({ question: q, answer }, i) => {
-        const decides = result.hardTrigger && q.id === "D1" && answer === "n" ? " This answer sets the result." : "";
-        const sources = q.sources.map(key => {
-            const s = SOURCES.find(x => x.key === key);
-            return `${s.title} (${s.status})`;
-        });
-        lines.push(
-            `${i + 1}. ${q.text}`,
-            `   Your answer: ${ANSWER_WORDS[answer]}${decides ? "." + decides : ""}`,
-            `   ${q.whyItMatters} ${q.expected}`,
-            `   Based on: ${sources.join(", ")}`
-        );
+    result.entries.forEach((entry, i) => {
+        const [first, ...rest] = entryLines(entry, result);
+        lines.push(`${i + 1}. ${first}`, ...rest.map(line => `   ${line}`));
     });
     lines.push("");
 
@@ -66,6 +57,31 @@ export function buildReport(state, result, { date, link }) {
         link
     );
     return lines.join("\n");
+}
+
+// Question, answer, text and sources of one entry. The report numbers and indents them.
+function entryLines({ question: q, answer }, result) {
+    const decides = result.hardTrigger && q.id === "D1" && answer === "n" ? ". This answer sets the result." : "";
+    const sources = q.sources.map(key => {
+        const s = SOURCES.find(x => x.key === key);
+        return `${s.title} (${s.status})`;
+    });
+    return [
+        q.text,
+        `Your answer: ${ANSWER_WORDS[answer]}${decides}`,
+        `${q.whyItMatters} ${q.expected}`,
+        `Based on: ${sources.join(", ")}`
+    ];
+}
+
+/**
+ * The text for "Copy entry": one entry as in the report, followed by the link to the result.
+ * @param entry   one of runAssessment(state).entries
+ * @param result  runAssessment(state)
+ * @param link    the link to this result
+ */
+export function buildEntry(entry, result, link) {
+    return [...entryLines(entry, result), link].join("\n");
 }
 
 const COUNT_WORDS = ["None", "One", "Two", "Three", "Four", "Five"];
