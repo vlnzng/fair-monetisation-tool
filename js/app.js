@@ -2,11 +2,12 @@
 import { AREAS } from "./data/areas.js";
 import { K1, K2_OPTIONS } from "./data/questions.js";
 import { SOURCES } from "./data/sources.js";
-import { getQuestions, runAssessment } from "./scoring.js";
+import { getQuestions } from "./scoring.js";
+import { renderResult } from "./result.js";
+import { sketch } from "./sketches.js";
 import { el } from "./utils.js";
 
 const ANSWERS = [["y", "Yes"], ["n", "No"], ["u", "Unsure"]];
-const LEVEL_WORDS = { minimal: "Minimal", moderate: "Moderate", elevated: "Elevated" };
 const NAME_MAX = 40;
 
 const state = freshState();
@@ -27,11 +28,14 @@ function stepKeys() {
 
 // ---- Flow ---------------------------------------------------------------------
 
-function goTo(step) {
+// Renders a step, scrolls the tool to the top and moves focus to the step title
+// or, when given, to another element of the new view.
+function goTo(step, focusSelector = "[data-step-title]") {
     state.step = step;
+    if (step === "result") state.returnToResult = false;
     render();
     root.scrollIntoView({ block: "start" });
-    root.querySelector("[data-step-title]")?.focus({ preventScroll: true });
+    root.querySelector(focusSelector)?.focus({ preventScroll: true });
 }
 
 function next() {
@@ -39,7 +43,29 @@ function next() {
     if (missing.length) return showMissing(missing);
 
     const keys = stepKeys();
+    if (state.returnToResult) {
+        // Back to the result, unless a context change added questions that are still open.
+        const open = asked().find(q => !state.answers[q.id]);
+        return goTo(open ? open.area : "result");
+    }
     goTo(keys[keys.indexOf(state.step) + 1]);
+}
+
+// "Change" in the result: open the step that holds the answer, focus its first option.
+function change(target) {
+    state.returnToResult = true;
+    if (target === "k1" || target === "k2") return goTo("about", `input[name="${target}"]`);
+    const q = asked().find(x => x.id === target);
+    goTo(q.area, `input[name="${q.id}"]`);
+}
+
+function primaryLabel() {
+    if (state.returnToResult) {
+        const othersDone = asked().filter(q => q.area !== state.step).every(q => state.answers[q.id]);
+        if (othersDone) return "Update result";
+    }
+    if (state.step === "about") return "Continue";
+    return isLastArea(state.step) ? "See the result" : "Next";
 }
 
 function back() {
@@ -69,7 +95,10 @@ function setContext(k1, k2) {
 // ---- Rendering ----------------------------------------------------------------
 
 function render() {
-    const views = { about: renderAbout, result: renderResult };
+    const views = {
+        about: renderAbout,
+        result: () => renderResult(state, { title: stepTitle("Your assessment"), onChange: change, onRestart: restart })
+    };
     const view = (views[state.step] ?? renderArea)(state.step);
     root.replaceChildren(...(state.step === "result" ? [view] : [renderProgress(), view]));
 }
@@ -141,6 +170,7 @@ function renderAbout() {
     const refresh = () => {
         count.replaceChildren(...countText());
         root.querySelector(".progress")?.replaceWith(renderProgress());
+        root.querySelector(".step-next").textContent = primaryLabel();
     };
 
     const k1Field = el("fieldset", { class: "question", "data-question": "k1", "aria-describedby": "k1-hint" }, [
@@ -200,7 +230,7 @@ function renderAbout() {
         ]),
         k1Field,
         k2Field,
-        renderFooter({ start: count, primary: "Continue" })
+        renderFooter({ start: count, primary: primaryLabel() })
     ]);
 }
 
@@ -237,12 +267,12 @@ function renderArea(key) {
             el("details", { class: "disclosure" }, [
                 el("summary", {}, ["Show an example"]),
                 el("div", { class: "example-box" }, [
-                    el("span", { class: "sketch-slot", "data-sketch": q.id, "aria-hidden": "true" }),
+                    sketch(q.id),
                     el("p", { class: "text-small text-muted" }, [q.example])
                 ])
             ])
         ])),
-        renderFooter({ showBack: true, primary: isLastArea(key) ? "See the result" : "Next" })
+        renderFooter({ showBack: true, primary: primaryLabel() })
     ]);
 }
 
@@ -257,21 +287,6 @@ function renderFooter({ start = null, showBack = false, primary }) {
         el("div", { class: "step-footer-main" }, [
             el("p", { class: "step-status text-small", "aria-live": "polite", "data-status": "" }),
             el("button", { class: "btn btn--primary step-next", type: "button", onclick: next }, [primary])
-        ])
-    ]);
-}
-
-// Placeholder until the result view of step 6.
-function renderResult() {
-    const result = runAssessment(state);
-    return el("div", { class: "step-card" }, [
-        el("div", { class: "step-head" }, [
-            stepTitle("Your assessment"),
-            el("p", { class: "text-small text-muted" }, [`Overall concern: ${LEVEL_WORDS[result.overall]}`])
-        ]),
-        el("div", { class: "step-footer" }, [
-            el("span"),
-            el("button", { class: "btn btn--primary", type: "button", onclick: restart }, ["Check another flow"])
         ])
     ]);
 }
