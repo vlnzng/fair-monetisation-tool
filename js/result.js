@@ -14,7 +14,7 @@ const answerWord = code => el("strong", { class: code === "u" ? "answer is-unsur
 
 /**
  * @param state    the app state
- * @param title    the step title element ("Your assessment")
+ * @param title    the step title element ("Your assessment" or "Example assessment")
  * @param link     the link to this result, printed at the bottom
  * @param actions  { change(target), restart(), example(key), copyReport(button), copyLink(button), print() }
  */
@@ -59,7 +59,7 @@ export function renderResult(state, { title, link, actions }) {
         if (!level) {
             return el("li", { class: "area-level is-skipped" }, [
                 el("span", { class: "area-level-name" }, [a.name]),
-                el("span", { class: "area-level-value" }, ["Skipped in step 1"])
+                el("span", { class: "area-level-value" }, ["Not in this flow"])
             ]);
         }
         return el("li", { class: "area-level", "data-level": level }, [
@@ -78,7 +78,8 @@ export function renderResult(state, { title, link, actions }) {
         renderAllAnswers(state, result, actions.change),
         el("div", { class: "result-foot" }, [
             el("p", { class: "text-small text-muted" }, [`This result reflects what is visible in the interface and EU rules as of ${AS_OF}. It is an assessment, not a legal verdict.`]),
-            el("button", { class: "btn btn--primary", type: "button", onclick: actions.restart }, ["Check another flow"])
+            // On an example, the same name as the button in the example bar: one action, one name.
+            el("button", { class: "btn btn--primary", type: "button", onclick: actions.restart }, [state.example ? "Check your own flow" : "Check another flow"])
         ]),
         // Set as textContent, so the printed link has no word joiners and copies cleanly.
         el("p", { class: "print-only print-link", textContent: link })

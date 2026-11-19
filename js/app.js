@@ -122,7 +122,7 @@ function render() {
     const views = {
         about: renderAbout,
         result: () => renderResult(state, {
-            title: stepTitle("Your assessment"),
+            title: stepTitle(state.example ? "Example assessment" : "Your assessment"),
             link: resultLink(),
             actions: { change, restart, example: loadExample, copyReport, copyLink, print: printResult }
         })
@@ -290,7 +290,7 @@ function renderAbout() {
     return el("div", { class: "step-card" }, [
         el("div", { class: "step-head step-head--about" }, [
             stepTitle("About this flow"),
-            el("p", { class: "text-small text-muted" }, ["Two answers decide which questions follow. Nobody reads a question that does not apply."]),
+            el("p", { class: "text-small text-muted prose" }, ["A flow is one path from the shop screen to the confirmation. Two answers decide which questions follow. Nobody reads a question that does not apply."]),
             exampleLink
         ]),
         el("div", { class: "field" }, [

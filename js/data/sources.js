@@ -4,7 +4,7 @@ export const SOURCES = [
         key: "cpc",
         title: "Key principles on in-game virtual currencies",
         detail: "CPC network, 2025",
-        status: "CPC guidance",
+        status: "EU guidance",
         url: "https://commission.europa.eu/document/download/8af13e88-6540-436c-b137-9853e7fe866a_en?filename=Key+principles+on+in-game+virtual+currencies.pdf"
     },
     {

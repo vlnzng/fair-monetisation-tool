@@ -35,7 +35,7 @@ export function buildReport(state, result, { date, link }) {
     lines.push("Level by area");
     for (const a of AREAS) {
         const level = result.areaLevels[a.key];
-        lines.push(`${a.name}: ${level ? LEVEL_WORDS[level] : "skipped"}`);
+        lines.push(`${a.name}: ${level ? LEVEL_WORDS[level] : "not in this flow"}`);
     }
     lines.push("");
 
