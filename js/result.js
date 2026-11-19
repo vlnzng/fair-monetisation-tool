@@ -80,7 +80,8 @@ export function renderResult(state, { title, link, actions }) {
             el("p", { class: "text-small text-muted" }, [`This result reflects what is visible in the interface and EU rules as of ${AS_OF}. It is an assessment, not a legal verdict.`]),
             el("button", { class: "btn btn--primary", type: "button", onclick: actions.restart }, ["Check another flow"])
         ]),
-        el("p", { class: "print-only print-link" }, [link])
+        // Set as textContent, so the printed link has no word joiners and copies cleanly.
+        el("p", { class: "print-only print-link", textContent: link })
     ]);
 }
 

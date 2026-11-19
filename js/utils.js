@@ -1,3 +1,7 @@
+// A word joiner after a hyphen inside a word keeps "Under-18" or "real-money" from breaking
+// at the hyphen. It is invisible and leaves the hyphen itself as it is.
+const keepHyphens = text => text.replace(/(?<=\w-)(?=\w)/g, "⁠");
+
 // Creates an element. Text children become text nodes, so user and URL input is never parsed as HTML.
 export function el(tag, attrs = {}, children = []) {
     const node = document.createElement(tag);
@@ -10,7 +14,7 @@ export function el(tag, attrs = {}, children = []) {
     }
     for (const c of [].concat(children)) {
         if (c == null || c === false) continue;
-        node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
+        node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(keepHyphens(String(c))) : c);
     }
     return node;
 }
