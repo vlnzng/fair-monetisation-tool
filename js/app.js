@@ -6,6 +6,7 @@ import { SOURCES } from "./data/sources.js";
 import { getQuestions, runAssessment } from "./scoring.js";
 import { encodeFragment, decodeFragment, stateFromExample, NAME_MAX } from "./link.js";
 import { buildReport } from "./report.js";
+import { initHero } from "./hero.js";
 import { renderResult } from "./result.js";
 import { sketch } from "./sketches.js";
 import { el } from "./utils.js";
@@ -445,3 +446,4 @@ function init() {
 }
 
 init();
+initHero();
