@@ -9,7 +9,7 @@ import { buildReport } from "./report.js";
 import { initHero } from "./hero.js";
 import { renderResult } from "./result.js";
 import { sketch } from "./sketches.js";
-import { el } from "./utils.js";
+import { el, externalLink } from "./utils.js";
 
 const ANSWERS = [["y", "Yes"], ["n", "No"], ["u", "Unsure"]];
 
@@ -310,7 +310,7 @@ function sourcesLine(keys) {
     keys.forEach((key, i) => {
         const s = SOURCES.find(x => x.key === key);
         if (i > 0) parts.push(" and ");
-        parts.push(el("a", { href: "#sources" }, [s.title]), ` (${s.detail})`);
+        parts.push(externalLink(s.url, s.title), ` (${s.detail})`);
     });
     return el("p", { class: "text-meta text-muted" }, ["Based on ", ...parts]);
 }

@@ -14,3 +14,8 @@ export function el(tag, attrs = {}, children = []) {
     }
     return node;
 }
+
+// A link to another site. Opens in a new tab, announced by the hidden note in index.html.
+export function externalLink(href, text) {
+    return el("a", { href, target: "_blank", rel: "noopener", "aria-describedby": "new-tab-note" }, [text]);
+}
