@@ -1309,11 +1309,19 @@ input {
     color: var(--muted);
 }
 
-/* Missing answer (spec 6.6). */
+/* Missing answer (spec 6.6). The bar sits in the card's padding: flush with the card's inner
+   edge on mobile, where the padding is 20px, and further in from 640px. */
 .question.is-missing {
-    margin-left: calc(-1 * (var(--s-5) + 3px));
-    padding-left: var(--s-5);
+    margin-left: calc(-1 * var(--s-5));
+    padding-left: calc(var(--s-5) - 3px);
     border-left: 3px solid var(--error);
+}
+
+@media (min-width: 640px) {
+    .question.is-missing {
+        margin-left: calc(-1 * (var(--s-5) + 3px));
+        padding-left: var(--s-5);
+    }
 }
 
 .question.is-missing .option {
