@@ -1,17 +1,20 @@
-// Step flow of the check (spec sections 6.2 to 6.7). One state object, every view renders from it.
+// Step flow of the check (spec sections 6.2 to 6.7), examples, result link, report and print
+// (7.1, 7.8, 10). One state object, every view renders from it.
 import { AREAS } from "./data/areas.js";
 import { K1, K2_OPTIONS } from "./data/questions.js";
 import { SOURCES } from "./data/sources.js";
-import { getQuestions } from "./scoring.js";
+import { getQuestions, runAssessment } from "./scoring.js";
+import { encodeFragment, decodeFragment, stateFromExample, NAME_MAX } from "./link.js";
+import { buildReport } from "./report.js";
 import { renderResult } from "./result.js";
 import { sketch } from "./sketches.js";
 import { el } from "./utils.js";
 
 const ANSWERS = [["y", "Yes"], ["n", "No"], ["u", "Unsure"]];
-const NAME_MAX = 40;
 
 const state = freshState();
 let root;
+let announcer;
 
 function freshState() {
     return { step: "about", name: "", k1: null, k2: [], answers: {}, example: null, returnToResult: false };
@@ -37,6 +40,25 @@ function goTo(step, focusSelector = "[data-step-title]") {
     root.scrollIntoView({ block: "start" });
     root.querySelector(focusSelector)?.focus({ preventScroll: true });
 }
+
+// Any edit turns a loaded example into the person's own run, under the same name.
+function edited() {
+    state.example = null;
+}
+
+function loadExample(key) {
+    Object.assign(state, freshState(), stateFromExample(key));
+    goTo("result");
+}
+
+// The result lives in the URL fragment while it is shown, so it never reaches the server.
+// Steps replace the entry instead of adding one, so the Back button is not hijacked.
+function syncFragment() {
+    if (state.step === "result") history.replaceState(null, "", `#${encodeFragment(state)}`);
+    else if (location.hash.includes("=")) history.replaceState(null, "", location.pathname + location.search);
+}
+
+const resultLink = () => `${location.origin}${location.pathname}#${encodeFragment(state)}`;
 
 function next() {
     const missing = openQuestions();
@@ -86,6 +108,7 @@ function openQuestions() {
 
 // Keeps answers of questions that are still asked and drops the others.
 function setContext(k1, k2) {
+    edited();
     state.k1 = k1;
     state.k2 = k2;
     const ids = new Set(asked().map(q => q.id));
@@ -97,10 +120,57 @@ function setContext(k1, k2) {
 function render() {
     const views = {
         about: renderAbout,
-        result: () => renderResult(state, { title: stepTitle("Your assessment"), onChange: change, onRestart: restart })
+        result: () => renderResult(state, {
+            title: stepTitle("Your assessment"),
+            link: resultLink(),
+            actions: { change, restart, example: loadExample, copyReport, copyLink, print: printResult }
+        })
     };
     const view = (views[state.step] ?? renderArea)(state.step);
     root.replaceChildren(...(state.step === "result" ? [view] : [renderProgress(), view]));
+    syncFragment();
+}
+
+// ---- Copy and print -------------------------------------------------------------
+
+// Shows the outcome on the button for two seconds and announces it.
+function flash(button, text) {
+    const label = button.dataset.label ?? button.textContent;
+    button.dataset.label = label;
+    button.textContent = text;
+    announcer.textContent = text;
+    clearTimeout(button._timer);
+    button._timer = setTimeout(() => {
+        button.textContent = label;
+        announcer.textContent = "";
+    }, 2000);
+}
+
+async function copy(text, button, done) {
+    try {
+        await navigator.clipboard.writeText(text);
+        flash(button, done);
+    } catch {
+        flash(button, "Could not copy");
+    }
+}
+
+function copyReport(button) {
+    const date = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+    copy(buildReport(state, runAssessment(state), { date, link: resultLink() }), button, "Report copied");
+}
+
+function copyLink(button) {
+    copy(resultLink(), button, "Link copied");
+}
+
+// The print stylesheet shows only the result. All answers are printed opened.
+function printResult() {
+    const all = root.querySelector(".all-answers");
+    const wasOpen = all?.open;
+    if (all) all.open = true;
+    window.addEventListener("afterprint", () => { if (all) all.open = wasOpen; }, { once: true });
+    window.print();
 }
 
 function stepTitle(text) {
@@ -224,7 +294,7 @@ function renderAbout() {
                 maxlength: NAME_MAX,
                 value: state.name,
                 "aria-describedby": "flow-name-hint",
-                oninput: e => { state.name = e.target.value.slice(0, NAME_MAX); }
+                oninput: e => { edited(); state.name = e.target.value.slice(0, NAME_MAX); }
             }),
             el("p", { class: "field-hint text-meta text-muted", id: "flow-name-hint" }, ["Shown at the top of your result and report."])
         ]),
@@ -260,6 +330,7 @@ function renderArea(key) {
         ...questions.map(q => el("fieldset", { class: "question", "data-question": q.id }, [
             el("legend", { class: "text-h3" }, [q.text]),
             answerOptions(q.id, state.answers[q.id], code => {
+                edited();
                 state.answers[q.id] = code;
                 clearMissing(q.id);
                 root.querySelector(".progress")?.replaceWith(renderProgress());
@@ -335,16 +406,41 @@ function updateStatus() {
 
 // ---- Start ----------------------------------------------------------------------
 
+// A valid result fragment opens that result. Anything else, such as "#why", is left alone.
+function openFromFragment() {
+    const run = decodeFragment(location.hash);
+    if (!run) return false;
+    Object.assign(state, freshState(), run, { step: "result" });
+    render();
+    return true;
+}
+
 function init() {
     root = document.querySelector("[data-tool]");
     if (!root) return;
-    render();
+
+    // Announces "Link copied" and "Report copied". Lives outside the re-rendered tool.
+    announcer = el("p", { class: "visually-hidden", role: "status" });
+    root.after(announcer);
+
+    if (openFromFragment()) root.scrollIntoView({ block: "start" });
+    else render();
+
+    window.addEventListener("hashchange", () => {
+        if (openFromFragment()) root.scrollIntoView({ block: "start" });
+    });
 
     // "Start the check" scrolls to the tool and moves focus to the step title.
     document.querySelector("[data-start]")?.addEventListener("click", e => {
         e.preventDefault();
         root.scrollIntoView({ block: "start" });
         root.querySelector("[data-step-title]")?.focus({ preventScroll: true });
+    });
+
+    // "See an example result" opens the first example.
+    document.querySelector("[data-example]")?.addEventListener("click", e => {
+        e.preventDefault();
+        loadExample(e.currentTarget.dataset.example);
     });
 }
 

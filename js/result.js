@@ -1,42 +1,43 @@
-// Result view (spec 7.2 to 7.7). Renders from the state, actions come from app.js.
+// Result view (spec 7.1 to 7.7). Renders from the state, actions come from app.js.
 import { AREAS } from "./data/areas.js";
-import { K2_OPTIONS } from "./data/questions.js";
 import { SOURCES } from "./data/sources.js";
+import { EXAMPLES } from "./data/examples.js";
 import { runAssessment } from "./scoring.js";
-import { LEVEL_WORDS, reasonLines } from "./report.js";
+import { LEVEL_WORDS, ANSWER_WORDS, AS_OF, includesText, reasonLines } from "./report.js";
 import { sketch } from "./sketches.js";
 import { el } from "./utils.js";
-
-const ANSWER_WORDS = { y: "Yes", n: "No", u: "Unsure" };
 
 const bars = size => el("span", { class: size === "large" ? "bars bars--large" : "bars", "aria-hidden": "true" },
     [el("i"), el("i"), el("i")]);
 
 const answerWord = code => el("strong", { class: code === "u" ? "answer is-unsure" : "answer" }, [ANSWER_WORDS[code]]);
 
-// "Virtual currency, a subscription or a pass that renews"
-export function includesText(k2) {
-    const titles = K2_OPTIONS.filter(o => k2.includes(o.key)).map(o => o.title);
-    if (!titles.length) return "None of these";
-    return titles.map((t, i) => (i === 0 ? t : t.charAt(0).toLowerCase() + t.slice(1))).join(", ");
-}
-
 /**
- * @param state      the app state
- * @param title      the step title element ("Your assessment")
- * @param onChange   called with "k1", "k2" or a question id
- * @param onRestart  clears everything and opens the about step
+ * @param state    the app state
+ * @param title    the step title element ("Your assessment")
+ * @param link     the link to this result, printed at the bottom
+ * @param actions  { change(target), restart(), example(key), copyReport(button), copyLink(button), print() }
  */
-export function renderResult(state, { title, onChange, onRestart }) {
+export function renderResult(state, { title, link, actions }) {
     const result = runAssessment(state);
     const name = state.name.trim();
     const [reason, detail] = reasonLines(result);
 
+    const action = (label, handler) =>
+        el("button", { class: "btn btn--secondary btn--small", type: "button", onclick: e => handler(e.currentTarget) }, [label]);
+
     const head = el("div", { class: "result-head" }, [
-        el("p", { class: "text-small text-muted" }, name
-            ? ["Result for ", el("strong", { class: "result-name" }, [name]), `, ${result.asked.length} questions`]
-            : [`Result, ${result.asked.length} questions`]),
-        title
+        el("div", { class: "result-heading" }, [
+            el("p", { class: "text-small text-muted" }, name
+                ? ["Result for ", el("strong", { class: "result-name" }, [name]), `, ${result.asked.length} questions`]
+                : [`Result, ${result.asked.length} questions`]),
+            title
+        ]),
+        el("div", { class: "result-actions" }, [
+            action("Copy report", actions.copyReport),
+            action("Copy link", actions.copyLink),
+            action("Print", actions.print)
+        ])
     ]);
 
     const overall = el("div", { class: "overall", "data-level": result.overall }, [
@@ -68,15 +69,36 @@ export function renderResult(state, { title, onChange, onRestart }) {
     }));
 
     return el("div", { class: "result" }, [
+        state.example ? renderExampleBar(state.example, actions) : null,
+        el("p", { class: "print-only print-title" }, ["Fair Monetisation Risk Assessment Tool"]),
         head,
         overall,
         areas,
         renderEntries(result),
-        renderAllAnswers(state, result, onChange),
+        renderAllAnswers(state, result, actions.change),
         el("div", { class: "result-foot" }, [
-            el("p", { class: "text-small text-muted" }, ["This result reflects what is visible in the interface and EU rules as of November 2026. It is an assessment, not a legal verdict."]),
-            el("button", { class: "btn btn--primary", type: "button", onclick: onRestart }, ["Check another flow"])
-        ])
+            el("p", { class: "text-small text-muted" }, [`This result reflects what is visible in the interface and EU rules as of ${AS_OF}. It is an assessment, not a legal verdict.`]),
+            el("button", { class: "btn btn--primary", type: "button", onclick: actions.restart }, ["Check another flow"])
+        ]),
+        el("p", { class: "print-only print-link" }, [link])
+    ]);
+}
+
+// Shown only while an example is loaded (spec 7.1).
+function renderExampleBar(current, actions) {
+    return el("div", { class: "example-bar night" }, [
+        el("div", { class: "example-bar-text" }, [
+            el("p", {}, [el("strong", {}, ["Example result."]), " The answers are preset for a typical flow."]),
+            el("nav", { class: "example-links", "aria-label": "Examples" }, EXAMPLES.map(e =>
+                el("a", {
+                    class: "example-link",
+                    href: `#example=${e.key}`,
+                    "aria-current": e.key === current ? "true" : null,
+                    onclick: ev => { ev.preventDefault(); actions.example(e.key); }
+                }, [e.title])
+            ))
+        ]),
+        el("button", { class: "btn btn--on-night btn--small", type: "button", onclick: actions.restart }, ["Check your own flow"])
     ]);
 }
 
