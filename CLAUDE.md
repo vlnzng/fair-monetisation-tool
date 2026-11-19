@@ -25,13 +25,17 @@ production tool. In this order:
 2. The core of the thesis stays recognisable. Extensions and corrections are welcome.
 3. Details deep in the logic may stay open. Document them instead of perfecting them.
 
-## Current work: v2.0
+## Current work: v2.0 review
 
-- Spec: `docs/v2/v2-spec.md`. Source of truth for design, copy, questions, scoring
-  and build order. Content data: `docs/v2/v2-content.json`. Mockups:
-  `docs/v2/design-reference/*.html` (open them in a browser to compare).
-- Work through the build steps in section 14 of the spec, one at a time. After each step
-  stop, list the changed files, say how to check the result, and propose the commits.
+- Status (November 2026): all build steps of spec section 14 are done on `dev`.
+  Valentin now tests the Vercel preview of `dev` and reports what he finds.
+  Next: fixes from that review, then `dev` is merged into `main` and Valentin tags `v2.0`.
+- Fixes from the review: one topic per commit (`fix`, `style`, `content`), checked like
+  the build steps (tests, browser at all widths) before committing.
+- Spec: `docs/v2/v2-spec.md`. Source of truth for design, copy, questions and scoring.
+  Decisions taken during the build are recorded there. Content data:
+  `docs/v2/v2-content.json`. Mockups: `docs/v2/design-reference/*.html`
+  (open them in a browser to compare).
 - If a decision deviates from the spec, update the spec in the same change.
 - `docs/` is local only (listed in `.gitignore`) and is never committed:
   - `docs/v2/`: build spec, content file, mockups
@@ -45,8 +49,6 @@ HTML, CSS and vanilla JavaScript (ES modules). The shipped site has no framework
 no build step, no runtime dependencies and no CSS framework. No external requests:
 fonts are self-hosted, no analytics, no cookies. Development tooling (tests, CI, config)
 may be added when it clearly improves the project. Nothing unnecessary.
-
-Target structure for v2 (spec section 14). Until the build is done, v1.2 files may still exist.
 
 | File                    | Purpose                                                  |
 | ----------------------- | -------------------------------------------------------- |
@@ -66,7 +68,7 @@ Target structure for v2 (spec section 14). Until the build is done, v1.2 files m
 | `docs/`                 | Local only, not in git: v2 spec, mockups, thesis         |
 | `package.json`          | Test script only, no dependencies                        |
 | `.vercelignore`         | Keeps dev files out of the deployment                    |
-| `.github/workflows/`    | Runs the tests on push to `main` and on pull requests    |
+| `.github/workflows/`    | Runs the tests on push to `main` or `dev` and on PRs     |
 
 - Run locally: `python -m http.server 8080`, then open http://localhost:8080
 - Tests: `npm test` (Node 24 or newer, nothing to install). Run them after every change
@@ -91,9 +93,9 @@ Target structure for v2 (spec section 14). Until the build is done, v1.2 files m
 - Branches: `main` stays at v1.2 and is live. All v2 work happens on `dev`, where the
   page does not have to work between steps. When v2 is done, `dev` is merged into `main`.
 - Claude prepares the changes and splits them into commits by feature or task
-  (not too fine-grained). For the v2 build steps on `dev`, Claude checks the result
-  itself (tests, browser at all widths) and commits when it passes, then reports.
-  Anything outside the build steps, and every push or merge, waits for Valentin's OK.
+  (not too fine-grained). For v2 work on `dev` (build steps and review fixes), Claude
+  checks the result itself (tests, browser at all widths) and commits when it passes,
+  then reports. Anything else, and every push or merge, waits for Valentin's OK.
 - Push only after Valentin has approved the commits.
 - Never run `git tag` or anything that rewrites history. Valentin tags (`v2.0` at the end).
 - After committing, summarise each commit in one to three lines.
@@ -141,3 +143,6 @@ Examples:
 - From spec section 15: the mapping of questions to legal rules is not checked against
   the legal texts; the 2026 timeline entries and the DFA and PEGI links come from
   research and are not checked; favicon and share image are not designed.
+- Small things left from the build: between 640 and about 700 px the header links wrap
+  below the tool name; the interactive flow was checked in Chromium only (Firefox by
+  screenshots); the countdown's wrap from 00:00 to 09:59 was not watched live.
