@@ -16,6 +16,7 @@ const ANSWERS = [["y", "Yes"], ["n", "No"], ["u", "Unsure"]];
 const state = freshState();
 let root;
 let announcer;
+let shown = null; // step and example of the view on screen, for the history (spec 10)
 
 function freshState() {
     return { step: "about", name: "", k1: null, k2: [], answers: {}, example: null, returnToResult: false };
@@ -53,10 +54,43 @@ function loadExample(key) {
 }
 
 // The result lives in the URL fragment while it is shown, so it never reaches the server.
-// Steps replace the entry instead of adding one, so the Back button is not hijacked.
-function syncFragment() {
-    if (state.step === "result") history.replaceState(null, "", `#${encodeFragment(state)}`);
-    else if (location.hash.includes("=")) history.replaceState(null, "", location.pathname + location.search);
+// It has its own history entry (spec 10): opening it pushes an entry with the fragment, leaving
+// it pushes one without, switching examples replaces it. Question steps add no entries.
+function syncHistory(from) {
+    const page = location.pathname + location.search;
+    const wasResult = from?.step === "result";
+    if (state.step === "result") {
+        const fragment = `#${encodeFragment(state)}`;
+        if (wasResult && from.example && state.example) return history.replaceState(null, "", fragment);
+        // So that Back from the result lands on an entry without fragment, drop a section anchor.
+        if (location.hash && !decodeFragment(location.hash)) history.replaceState(null, "", page);
+        history.pushState(null, "", fragment);
+    } else if (wasResult) {
+        history.pushState(null, "", page);
+    }
+}
+
+// Back or forward in the browser. A result fragment shows that result. Without a fragment, the
+// result gives way to the about step: an own run keeps its answers, an example starts empty, so
+// nothing is pre-selected. A section anchor such as "#method" leaves the tool as it is.
+function onHistory() {
+    const run = decodeFragment(location.hash);
+    if (run) {
+        if (shown?.step === "result" && encodeFragment(state) === encodeFragment(run)) return;
+        Object.assign(state, freshState(), run, { step: "result" });
+    } else if (!location.hash && shown?.step === "result") {
+        if (state.example) Object.assign(state, freshState());
+        state.step = "about";
+        state.returnToResult = false;
+    } else {
+        return;
+    }
+    render({ track: false });
+    // After the browser has restored its own scroll position.
+    requestAnimationFrame(() => {
+        root.scrollIntoView({ block: "start" });
+        root.querySelector("[data-step-title]")?.focus({ preventScroll: true });
+    });
 }
 
 const resultLink = () => `${location.origin}${location.pathname}#${encodeFragment(state)}`;
@@ -118,7 +152,9 @@ function setContext(k1, k2) {
 
 // ---- Rendering ----------------------------------------------------------------
 
-function render() {
+// track: false for renders that follow the URL (start, back and forward) instead of changing it.
+function render({ track = true } = {}) {
+    const from = shown;
     const views = {
         about: renderAbout,
         result: () => renderResult(state, {
@@ -129,7 +165,8 @@ function render() {
     };
     const view = (views[state.step] ?? renderArea)(state.step);
     root.replaceChildren(...(state.step === "result" ? [view] : [renderProgress(), view]));
-    syncFragment();
+    shown = { step: state.step, example: state.example };
+    if (track) syncHistory(from);
 }
 
 // ---- Copy and print -------------------------------------------------------------
@@ -431,29 +468,25 @@ function updateStatus() {
 
 // ---- Start ----------------------------------------------------------------------
 
-// A valid result fragment opens that result. Anything else, such as "#why", is left alone.
-function openFromFragment() {
-    const run = decodeFragment(location.hash);
-    if (!run) return false;
-    Object.assign(state, freshState(), run, { step: "result" });
-    render();
-    return true;
-}
-
 function init() {
     root = document.querySelector("[data-tool]");
     if (!root) return;
 
-    // Announces "Link copied" and "Report copied". Lives outside the re-rendered tool.
+    // Announces "Link copied", "Report copied" and "Entry copied". Lives outside the re-rendered tool.
     announcer = el("p", { class: "visually-hidden", role: "status" });
     root.after(announcer);
 
-    if (openFromFragment()) root.scrollIntoView({ block: "start" });
-    else render();
+    // A valid result fragment opens that result. Anything else, such as "#why", is left alone.
+    const run = decodeFragment(location.hash);
+    if (run) Object.assign(state, freshState(), run, { step: "result" });
+    render({ track: false });
+    if (run) {
+        history.replaceState(null, "", `#${encodeFragment(state)}`);
+        root.scrollIntoView({ block: "start" });
+    }
 
-    window.addEventListener("hashchange", () => {
-        if (openFromFragment()) root.scrollIntoView({ block: "start" });
-    });
+    // Back and forward, and fragments typed into the address bar.
+    window.addEventListener("popstate", onHistory);
 
     // "Start the check" scrolls to the tool and moves focus to the step title.
     document.querySelector("[data-start]")?.addEventListener("click", e => {

@@ -77,6 +77,8 @@ The result lives in the URL fragment, which browsers never send to the server.
 
 `k1` is the under-18 answer (`y`, `n`, `u`), `k2` the ticked items (`vc`, `sub`, `limited`, `random`, may be empty), `a` every asked question with its answer, and `name` the optional flow name, cut to 40 characters. A fragment that does not list exactly the questions asked for its `k1` and `k2` is ignored. Section anchors such as `#method` are left alone.
 
+The result has its own entry in the browser history, so Back leaves it and Forward returns to it. Question steps add no entries.
+
 ## Scope and limits
 
 - Only what can be inspected in the interface. No personalised pricing, targeting, data use or other backend logic (section 6.1).
