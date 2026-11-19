@@ -1,24 +1,16 @@
+// Creates an element. Text children become text nodes, so user and URL input is never parsed as HTML.
 export function el(tag, attrs = {}, children = []) {
     const node = document.createElement(tag);
     for (const [k, v] of Object.entries(attrs)) {
+        if (v == null || v === false) continue;
         if (k === "class") node.className = v;
-        else if (k.startsWith("data-")) node.setAttribute(k, v);
-        else if (k in node) node[k] = v;
-        else node.setAttribute(k, v);
+        else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+        else if (k in node && !k.startsWith("aria") && !k.startsWith("data")) node[k] = v;
+        else node.setAttribute(k, v === true ? "" : v);
     }
-    for (const c of children) {
-        if (c == null) continue;
-        node.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+    for (const c of [].concat(children)) {
+        if (c == null || c === false) continue;
+        node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
     }
     return node;
-}
-
-export function clamp(n, min, max) {
-    return Math.max(min, Math.min(max, n));
-}
-
-export function mapLevel(total, thresholds) {
-    if (total <= thresholds.greenMax) return "green";
-    if (total <= thresholds.yellowMax) return "yellow";
-    return "red";
 }

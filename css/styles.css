@@ -748,6 +748,491 @@ input {
     max-width: 460px;
 }
 
+.tool-app {
+    scroll-margin-top: var(--s-4);
+}
+
+/* Progress: full groups from 640px, one compact row below. */
+.progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    margin-bottom: var(--s-6);
+}
+
+.progress-row {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--s-2);
+    font-size: var(--fs-small);
+}
+
+.progress-name { color: var(--muted); }
+.progress-name strong { color: var(--ink); font-weight: 600; }
+.progress-position { font-weight: 600; }
+
+.progress-groups {
+    display: none;
+    grid-template-columns: repeat(var(--groups), minmax(0, 1fr));
+    gap: var(--s-2);
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+}
+
+.progress-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+}
+
+.progress-group[aria-current="step"] {
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.progress-segments {
+    display: flex;
+    gap: 2px;
+}
+
+.progress-segments i {
+    flex: 1;
+    height: 5px;
+    background: var(--track);
+}
+
+.progress-segments i.is-done {
+    background: var(--ink);
+}
+
+.progress-compact {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+}
+
+.progress-compact-row {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-3);
+    font-size: var(--fs-meta);
+}
+
+.progress-compact-row span { color: var(--muted); }
+
+@media (min-width: 640px) {
+    .progress-row { display: flex; }
+    .progress-groups { display: grid; }
+    .progress-compact { display: none; }
+}
+
+/* Step card */
+.step-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-5);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    background: var(--surface);
+}
+
+@media (min-width: 640px) {
+    .step-card { padding: 28px; }
+}
+
+@media (min-width: 1024px) {
+    .step-card { padding: var(--s-10); }
+}
+
+.step-head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    margin-bottom: var(--s-3);
+}
+
+.step-title {
+    scroll-margin-top: var(--s-4);
+}
+
+.step-title:focus-visible {
+    outline-offset: var(--s-1);
+}
+
+.info-box,
+.example-box {
+    max-width: 640px;
+    margin-block: var(--s-2) var(--s-4);
+    padding: var(--s-4) var(--s-5);
+    border-radius: var(--r-control);
+    background: var(--paper);
+}
+
+.info-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+}
+
+.example-box {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-4);
+    padding: var(--s-4);
+}
+
+.sketch-slot:empty {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    .example-box {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--s-4) var(--s-6);
+    }
+
+    .example-box p {
+        flex: 1 1 220px;
+    }
+}
+
+/* Fields */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    padding-block: var(--s-6);
+    border-top: 1px solid var(--line);
+}
+
+.field-label {
+    font-size: var(--fs-body);
+    font-weight: 600;
+}
+
+.field-optional {
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.text-input {
+    width: 100%;
+    max-width: 420px;
+    min-height: 48px;
+    padding: 0 var(--s-4);
+    border: 1.5px solid var(--line-control);
+    border-radius: var(--r-control);
+    background: var(--surface);
+    font-size: var(--fs-ui);
+}
+
+.text-input:hover {
+    border-color: var(--ink);
+}
+
+.text-input:focus-visible {
+    outline-offset: 2px;
+}
+
+/* A question: fieldset with the question as legend. */
+.question {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    min-width: 0;
+    padding: var(--s-6) 0;
+    border: 0;
+    border-top: 1px solid var(--line);
+}
+
+.question legend {
+    float: left;
+    width: 100%;
+    padding: 0;
+}
+
+.question legend + * {
+    clear: both;
+}
+
+.field-hint {
+    margin-top: calc(-1 * var(--s-1));
+}
+
+/* Answer option: native radio covered by a drawn dot (spec 13). */
+.options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+}
+
+@media (min-width: 640px) {
+    .options {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.option,
+.check {
+    position: relative;
+    border: 1.5px solid var(--line-control);
+    border-radius: var(--r-control);
+    background: var(--surface);
+    cursor: pointer;
+}
+
+/* Mobile: three equal columns, content centred and tighter. */
+.option {
+    --pad-start: var(--s-2);
+    --pad-end: var(--s-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    min-height: 52px;
+    padding: 0 var(--pad-end) 0 var(--pad-start);
+    font-size: var(--fs-body);
+    font-weight: 500;
+}
+
+/* Below 360px three options side by side leave about 74px each: dot above the word. */
+@media (max-width: 359px) {
+    .option {
+        --pad-start: var(--s-1);
+        --pad-end: var(--s-1);
+        flex-direction: column;
+        gap: 2px;
+        padding-block: var(--s-1);
+        line-height: 1.2;
+    }
+}
+
+@media (min-width: 640px) {
+    .option {
+        --pad-start: var(--s-4);
+        --pad-end: var(--s-5);
+        justify-content: flex-start;
+        gap: var(--s-3);
+        min-width: 128px;
+    }
+}
+
+.option input,
+.check input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.option-dot {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--muted);
+    border-radius: 50%;
+    background: var(--surface);
+}
+
+.option:hover,
+.check:hover {
+    border-color: var(--ink);
+}
+
+/* Selected: 2px border, so the padding shrinks by half a pixel and nothing moves. */
+.option:has(input:checked) {
+    border: 2px solid var(--ink);
+    padding: 0 calc(var(--pad-end) - 0.5px) 0 calc(var(--pad-start) - 0.5px);
+    background: var(--selected);
+    font-weight: 600;
+}
+
+.option:has(input:checked) .option-dot {
+    border: 5.5px solid var(--ink);
+}
+
+.option:has(input:focus-visible),
+.check:has(input:focus-visible) {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* Checkbox option */
+.checks {
+    display: grid;
+    gap: var(--s-2);
+    max-width: 820px;
+}
+
+@media (min-width: 640px) {
+    .checks { grid-template-columns: 1fr 1fr; }
+}
+
+.check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+}
+
+.check-box {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    border: 1.5px solid var(--muted);
+    border-radius: 4px; /* spec 13: 4px, smaller than any radius token */
+    background: var(--surface);
+}
+
+.check:has(input:checked) {
+    border: 2px solid var(--ink);
+    padding: calc(var(--s-3) - 0.5px) calc(var(--s-4) - 0.5px);
+    background: var(--selected);
+}
+
+.check:has(input:checked) .check-box {
+    border-color: var(--ink);
+    background: var(--ink);
+}
+
+/* White check drawn with two borders. */
+.check:has(input:checked) .check-box::after {
+    content: "";
+    width: 5px;
+    height: 10px;
+    margin-top: -2px;
+    border-right: 2px solid var(--surface);
+    border-bottom: 2px solid var(--surface);
+    transform: rotate(45deg);
+}
+
+.check-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.check-title {
+    font-size: var(--fs-ui);
+    line-height: var(--lh-ui);
+    font-weight: 600;
+}
+
+.check-hint {
+    font-size: var(--fs-meta);
+    line-height: var(--lh-meta);
+    color: var(--muted);
+}
+
+/* Missing answer (spec 6.6). */
+.question.is-missing {
+    margin-left: calc(-1 * (var(--s-5) + 3px));
+    padding-left: var(--s-5);
+    border-left: 3px solid var(--error);
+}
+
+.question.is-missing .option {
+    border-color: var(--error);
+}
+
+.question-error {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    color: var(--error);
+    font-size: var(--fs-small);
+    line-height: var(--lh-small);
+    font-weight: 600;
+}
+
+.question-error-icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--error);
+    color: var(--surface);
+    font-size: var(--fs-sketch-sm);
+}
+
+/* Footer of the card: Back left, status and primary button right. */
+.step-footer {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--s-3);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--line);
+}
+
+.step-footer > :first-child {
+    grid-column: 1 / -1;
+}
+
+.step-footer > .step-back {
+    grid-column: 1;
+}
+
+.step-footer-main {
+    display: contents;
+}
+
+.step-status {
+    grid-row: 1;
+    grid-column: 1 / -1;
+    color: var(--error);
+    font-weight: 600;
+}
+
+.step-status:empty {
+    display: none;
+}
+
+.step-next {
+    grid-column: 1 / -1;
+}
+
+.step-footer:has(> .step-back) .step-next {
+    grid-column: 2;
+}
+
+.step-count strong {
+    font-weight: 600;
+}
+
+@media (min-width: 640px) {
+    .step-footer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--s-4);
+    }
+
+    .step-footer-main {
+        display: flex;
+        align-items: center;
+        gap: var(--s-5);
+        margin-left: auto;
+    }
+}
+
 /* ---- Where this comes from ----------------------------------------------- */
 
 .background {
