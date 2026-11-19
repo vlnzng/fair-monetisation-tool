@@ -547,20 +547,11 @@ input {
     font-weight: 600;
 }
 
+/* The item image: a plain thumbnail, like the grey thumbnails in the sketches. */
 .offer-art {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 104px;
-    border: 1.5px dashed var(--night-line-strong);
     border-radius: var(--r-control);
-}
-
-.offer-art path {
-    fill: none;
-    stroke: var(--night-line-strong);
-    stroke-width: 1.5;
-    stroke-linejoin: round;
+    background: var(--night-line);
 }
 
 .offer-item {
