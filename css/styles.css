@@ -2185,8 +2185,11 @@ input {
     border-top: 1px solid var(--line);
 }
 
+/* Title with its line below, as in "Check a flow" and "Method and limits". */
 .background-head {
-    gap: var(--s-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
 }
 
 .background-columns {
@@ -2246,7 +2249,6 @@ input {
 }
 
 @media (min-width: 1024px) {
-    .background-head { gap: var(--s-6) var(--s-18); }
     .background-columns {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: var(--s-8);
