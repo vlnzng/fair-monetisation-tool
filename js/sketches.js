@@ -10,7 +10,18 @@ const muted = text => el("span", { class: "sk-muted" }, [text]);
 const row = (left, right) => el("span", { class: "sk-row" }, [left, right]);
 const buttons = (...items) => el("span", { class: "sk-buttons" }, items.map(([label, filled]) =>
     el("span", { class: filled ? "sk-button is-filled" : "sk-button" }, [label])));
-const arrow = () => el("span", { class: "sk-arrow" });
+// An open arrow as inline SVG, so the head always sits straight on the line.
+const SVG = "http://www.w3.org/2000/svg";
+function arrow() {
+    const svg = document.createElementNS(SVG, "svg");
+    const attrs = { class: "sk-arrow", width: 18, height: 10, viewBox: "0 0 18 10", fill: "none", stroke: "currentColor",
+        "stroke-width": 1.5, "stroke-linecap": "round", "stroke-linejoin": "round" };
+    for (const [k, v] of Object.entries(attrs)) svg.setAttribute(k, v);
+    const path = document.createElementNS(SVG, "path");
+    path.setAttribute("d", "M1 5h15M12 1.5 16 5l-4 3.5");
+    svg.append(path);
+    return svg;
+}
 
 const SKETCHES = {
     A1: () => el("span", { class: "sketch sk-item", "aria-hidden": "true" }, [
