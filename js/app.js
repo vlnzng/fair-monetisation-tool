@@ -199,17 +199,22 @@ function render({ track = true } = {}) {
 
 // ---- Copy and print -------------------------------------------------------------
 
-// Shows the outcome on the button for two seconds and announces it.
+// Shows the outcome on the button for two seconds and announces it. The announcer has its own
+// timer, so an earlier button never clears a later announcement.
+let announcerTimer;
+
 function flash(button, text) {
     const label = button.dataset.label ?? button.textContent;
     button.dataset.label = label;
     button.textContent = text;
-    announcer.textContent = text;
     clearTimeout(button._timer);
-    button._timer = setTimeout(() => {
-        button.textContent = label;
-        announcer.textContent = "";
-    }, 2000);
+    button._timer = setTimeout(() => { button.textContent = label; }, 2000);
+
+    // Emptied first, so the same text is read again when it repeats.
+    announcer.textContent = "";
+    clearTimeout(announcerTimer);
+    requestAnimationFrame(() => { announcer.textContent = text; });
+    announcerTimer = setTimeout(() => { announcer.textContent = ""; }, 2000);
 }
 
 async function copy(text, button, done) {
