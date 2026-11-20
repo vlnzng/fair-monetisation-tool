@@ -927,12 +927,19 @@ input {
     border-top: 1.5px solid var(--ink);
 }
 
-/* From tablet up the columns are always shown and the disclosure label is hidden. */
+/* From tablet up the columns are always shown and the disclosure label is hidden. Browsers
+   without ::details-content keep the label, so the columns stay reachable. */
 @media (min-width: 640px) {
     .why-content { gap: var(--s-8); }
-    .why-more > summary { display: none; }
-    .why-more::details-content { content-visibility: visible; }
-    .why-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); padding-top: 0; }
+    .why-columns { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@supports selector(::details-content) {
+    @media (min-width: 640px) {
+        .why-more > summary { display: none; }
+        .why-more::details-content { content-visibility: visible; }
+        .why-columns { padding-top: 0; }
+    }
 }
 
 /* ---- Tool section -------------------------------------------------------- */
@@ -1207,8 +1214,10 @@ input {
         grid-row: 1 / -1;
     }
 
-    .question--example > .disclosure > summary { display: none; }
-    .question--example > .disclosure::details-content { content-visibility: visible; }
+    @supports selector(::details-content) {
+        .question--example > .disclosure > summary { display: none; }
+        .question--example > .disclosure::details-content { content-visibility: visible; }
+    }
 
     .question--example .example-box {
         flex-direction: column;

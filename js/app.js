@@ -233,13 +233,25 @@ function copyEntry(button, entry) {
     copy(buildEntry(entry, runAssessment(state), resultLink()), button, "Entry copied");
 }
 
-// The print stylesheet shows only the result. All answers are printed opened.
+// The print stylesheet shows only the result. All answers are printed opened, also when
+// printing from the browser menu (for browsers without ::details-content).
 function printResult() {
-    const all = root.querySelector(".all-answers");
-    const wasOpen = all?.open;
-    if (all) all.open = true;
-    window.addEventListener("afterprint", () => { if (all) all.open = wasOpen; }, { once: true });
     window.print();
+}
+
+let printOpened = null;
+
+function beforePrint() {
+    const all = root.querySelector(".all-answers");
+    if (all && !all.open) {
+        all.open = true;
+        printOpened = all;
+    }
+}
+
+function afterPrint() {
+    if (printOpened) printOpened.open = false;
+    printOpened = null;
 }
 
 function stepTitle(text) {
@@ -516,6 +528,8 @@ function init() {
 
     // Back and forward, and fragments typed into the address bar.
     window.addEventListener("popstate", onHistory);
+    window.addEventListener("beforeprint", beforePrint);
+    window.addEventListener("afterprint", afterPrint);
 
     // "Start the check" scrolls to the tool and moves focus to the step title.
     document.querySelector("[data-start]")?.addEventListener("click", e => {
