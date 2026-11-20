@@ -1761,38 +1761,33 @@ input {
     text-wrap: balance;
     min-height: 44px;
     padding: 0 var(--s-4);
-    border: 1px solid var(--night-line-strong);
+    border: 1.5px solid var(--night-line-strong);
     border-radius: var(--r-control);
     font-size: var(--fs-small);
     font-weight: 600;
     text-decoration: none;
 }
 
-/* Hover like a link: border and text in the accent. The chosen example stays as it is. */
-.example-link:hover {
-    border-color: var(--accent-on-night);
-}
-
-.example-link[aria-current="true"],
-.example-link[aria-current="true"]:hover {
+/* Chosen and hovered as an answer option: hover takes the text colour, so it never looks like
+   the choice; the choice gets a 2px border in the accent. No white fill, which is reserved
+   for the button next to it. */
+.example-links .example-link:hover {
+    color: inherit;
     border-color: var(--on-night);
-    background: var(--on-night);
-    color: var(--night);
 }
 
-/* The level of each example as bars: filled light and open dim on the dark bar, the chosen
-   example in the level colours. */
+.example-links .example-link[aria-current="true"] {
+    padding: 0 calc(var(--s-4) - 0.5px);
+    border: 2px solid var(--accent-on-night);
+    background: var(--night-raised);
+}
+
+/* The level of each example as bars: filled light and open dim on the dark bar. */
 .example-link .bars i { background: var(--night-line-strong); }
 
 .example-link .bars i:nth-child(1),
 .example-link[data-level="moderate"] .bars i:nth-child(2),
 .example-link[data-level="elevated"] .bars i { background: var(--on-night); }
-
-.example-link[aria-current="true"] .bars i { background: var(--bar-open); }
-
-.example-link[aria-current="true"] .bars i:nth-child(1),
-.example-link[aria-current="true"][data-level="moderate"] .bars i:nth-child(2),
-.example-link[aria-current="true"][data-level="elevated"] .bars i { background: var(--level); }
 
 /* From 640px "Check your own flow" sits right of the text, the examples get the full width below. */
 @media (min-width: 640px) {
