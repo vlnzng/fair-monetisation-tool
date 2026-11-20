@@ -140,7 +140,7 @@ The site is deployed on Vercel as static files from the repository root.
 
 - [`v1.0-thesis`](https://github.com/vlnzng/fair-monetisation-tool/tree/v1.0-thesis): the version submitted with the thesis in January 2026.
 - v1.2: accessibility and print fixes, a self-hosted font, the scoring in its own module with tests.
-- v2.0: the revision one year on. New design, context step, fifteen questions with examples, the four scoring corrections, one explanation per answer, example results, result links and a plain-text report.
+- [`v2.0`](https://github.com/vlnzng/fair-monetisation-tool/tree/v2.0): November 2026, the revision one year on. New design, context step, fifteen questions with examples, the four scoring corrections, one explanation per answer, example results, result links and a plain-text report.
 
 ## References
 
