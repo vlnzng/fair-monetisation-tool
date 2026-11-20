@@ -128,7 +128,7 @@ function renderExampleBar(current, actions) {
     ]);
 }
 
-function basedOn(keys, after = null) {
+function basedOn(keys) {
     const parts = [];
     keys.forEach((key, i) => {
         const s = SOURCES.find(x => x.key === key);
@@ -136,9 +136,7 @@ function basedOn(keys, after = null) {
         // The status stays on one line: "(2026 proposal)", never "(2026" / "proposal)".
         parts.push(externalLink(s.url, s.title), ` (${s.status.replaceAll(" ", " ")})`);
     });
-    // A wide space before the button, not a margin, so it leaves no indent when the button wraps.
-    const gap = after ? el("span", { class: "entry-copy-gap" }, [" "]) : null;
-    return el("p", { class: "text-meta text-muted" }, ["Based on ", ...parts, gap, after]);
+    return el("p", { class: "text-meta text-muted" }, ["Based on ", ...parts]);
 }
 
 function renderEntries(result, actions) {
@@ -183,12 +181,14 @@ function renderEntry(entry, result, actions) {
         ]),
         el("div", { class: "entry-text" }, [
             el("p", {}, [`${q.whyItMatters} ${q.expected}`]),
-            basedOn(q.sources, el("button", {
+            basedOn(q.sources),
+            // On its own line, so it never reads as one more source.
+            el("button", {
                 class: "link-button text-meta entry-copy",
                 type: "button",
                 "aria-label": `Copy entry: ${q.text}`,
                 onclick: e => actions.copyEntry(e.currentTarget, entry)
-            }, ["Copy entry"]))
+            }, ["Copy entry"])
         ])
     ]);
 }
