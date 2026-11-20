@@ -356,7 +356,8 @@ input {
     transform: translateY(-50%);
 }
 
-/* Disclosure: underlined label with a chevron that turns when open. */
+/* Disclosure: underlined label with a chevron that turns when open. Underline and hover as for
+   every link and text button: the line in the accent, on hover the text too and the line 2px. */
 .disclosure > summary {
     display: inline-flex;
     align-items: center;
@@ -367,12 +368,14 @@ input {
     color: var(--muted);
     font-size: var(--fs-small);
     text-decoration: underline;
+    text-decoration-color: var(--accent-text);
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
 }
 
 .disclosure > summary:hover {
     color: var(--accent-text);
+    text-decoration-thickness: 2px;
 }
 
 .disclosure > summary::-webkit-details-marker { display: none; }
