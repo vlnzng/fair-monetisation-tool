@@ -94,9 +94,11 @@ may be added when it clearly improves the project. Nothing unnecessary.
   page does not have to work between steps. When v2 is done, `dev` is merged into `main`.
 - Claude prepares the changes and splits them into commits by feature or task
   (not too fine-grained). For v2 work on `dev` (build steps and review fixes), Claude
-  checks the result itself (tests, browser at all widths) and commits when it passes,
-  then reports. Anything else, and every push or merge, waits for Valentin's OK.
-- Push only after Valentin has approved the commits.
+  checks the result itself (tests, browser at all widths), commits when it passes and
+  pushes to `dev`, so the Vercel preview shows it, then reports. Anything else, every
+  other push and every merge wait for Valentin's OK.
+- Review fixes on `dev` are pushed right away. Every other push waits until Valentin
+  has approved the commits.
 - Never run `git tag` or anything that rewrites history. Valentin tags (`v2.0` at the end).
 - After committing, summarise each commit in one to three lines.
 - No attribution lines of any kind (no Co-Authored-By, no "Generated with").
