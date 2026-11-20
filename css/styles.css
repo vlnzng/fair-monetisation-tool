@@ -2241,12 +2241,16 @@ input {
     }
 }
 
-.accordion {
-    border-top: 1px solid var(--night-line);
+/* Each section is a raised surface. No dividers, here or in the lists inside. */
+.method-list {
+    display: grid;
+    gap: var(--s-2);
 }
 
-.accordion:last-child {
-    border-bottom: 1px solid var(--night-line);
+.accordion {
+    padding-inline: var(--s-6);
+    border-radius: var(--r-card);
+    background: var(--night-raised);
 }
 
 .accordion > summary {
@@ -2254,13 +2258,23 @@ input {
     justify-content: space-between;
     align-items: center;
     gap: var(--s-4);
-    min-height: 64px;
+    min-height: 68px;
     list-style: none;
     cursor: pointer;
 }
 
 .accordion > summary:hover {
     color: var(--accent-text);
+}
+
+/* Keyboard focus rings the whole surface, as with the answer options. */
+.accordion > summary:focus-visible {
+    outline: none;
+}
+
+.accordion:has(> summary:focus-visible) {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
 }
 
 .accordion > summary::-webkit-details-marker { display: none; }
@@ -2279,11 +2293,15 @@ input {
 .accordion-body {
     display: flex;
     flex-direction: column;
-    gap: var(--s-5);
+    gap: var(--s-6);
     padding-bottom: var(--s-8);
 }
 
+/* The steps keep their numbers, they are a sequence. Wrapped pretty, not balanced, so a step
+   never breaks as "No the / most." Browsers without pretty, such as Firefox, wrap normally. */
 .method-steps {
+    display: grid;
+    gap: var(--s-5);
     padding: 0;
     list-style: none;
 }
@@ -2292,11 +2310,11 @@ input {
     display: grid;
     grid-template-columns: 28px 1fr;
     gap: var(--s-3);
-    padding-block: var(--s-3);
-    border-top: 1px solid var(--night-line);
     font-size: var(--fs-small);
     line-height: var(--lh-small);
     color: var(--on-night-body);
+    text-wrap: wrap;
+    text-wrap: pretty;
 }
 
 .method-steps strong {
@@ -2307,6 +2325,7 @@ input {
 }
 
 .method-step-number {
+    padding-top: 2px; /* level with the larger step title */
     font-size: var(--fs-small);
     font-weight: 700;
     color: var(--on-night-muted);
@@ -2326,22 +2345,35 @@ input {
 }
 
 .scope-title {
-    padding-bottom: var(--s-2);
+    padding-bottom: var(--s-3);
     font-size: var(--fs-small);
     font-weight: 600;
 }
 
+/* List items start with a short grey dash instead of a divider. */
 .plain-list {
+    display: grid;
+    gap: var(--s-3);
     padding: 0;
     list-style: none;
 }
 
 .plain-list li {
-    padding-block: var(--s-2);
-    border-top: 1px solid var(--night-line);
+    position: relative;
+    padding-left: calc(6px + var(--s-3));
     font-size: var(--fs-small);
     line-height: var(--lh-small);
     color: var(--on-night-body);
+}
+
+.plain-list li::before {
+    content: "";
+    position: absolute;
+    top: 0.72em;
+    left: 0;
+    width: 6px;
+    height: 2px;
+    background: var(--night-line-strong);
 }
 
 @media (min-width: 640px) {
