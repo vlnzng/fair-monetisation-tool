@@ -548,14 +548,22 @@ input {
     .hero { padding-block: var(--s-14) var(--s-22); }
 }
 
-/* Two columns only from 1200px: below that, text, card and notes do not fit side by side
-   and the fixed line break of the h1 would wrap a second time. */
-@media (min-width: 1200px) {
+/* Two columns from 1024px, like the rest of the page. The figure never gets narrower than
+   520px: the card keeps its size, the notes get narrower. Up to about 1150px the h1 scales
+   with its column, so its fixed line break never wraps a second time. */
+@media (min-width: 1024px) {
     .hero-grid {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+        grid-template-columns: minmax(0, 1fr) minmax(520px, 1.05fr);
         align-items: center;
-        gap: var(--s-12) var(--s-14);
+        gap: var(--s-12) var(--s-10);
     }
+
+    .hero-copy { container-type: inline-size; }
+    .hero-copy h1 { font-size: min(var(--fs-display), 12cqi); }
+}
+
+@media (min-width: 1200px) {
+    .hero-grid { gap: var(--s-12) var(--s-14); }
 }
 
 /* Hero figure: a line drawing of an offer, with three numbered notes. */
