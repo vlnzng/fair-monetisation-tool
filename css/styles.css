@@ -2076,10 +2076,13 @@ input {
     padding-bottom: var(--s-3);
 }
 
+/* Set like the area titles in "Worth a closer look". */
 .answer-group-title {
     padding-block: var(--s-2) 6px;
-    font-size: var(--fs-meta);
+    font-size: var(--fs-small);
+    line-height: var(--lh-small);
     font-weight: 600;
+    color: var(--muted);
 }
 
 .answer-group ul {
