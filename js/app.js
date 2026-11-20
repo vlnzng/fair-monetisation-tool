@@ -291,7 +291,8 @@ function renderProgress() {
     const segments = done => el("span", { class: "progress-segments", "aria-hidden": "true" },
         done.map(d => el("i", { class: d ? "is-done" : null })));
 
-    return el("nav", { class: "progress", "aria-label": "Progress" }, [
+    // A group, not a nav landmark: nothing in it can be clicked.
+    return el("div", { class: "progress", role: "group", "aria-label": "Progress" }, [
         el("div", { class: "progress-row" }, [
             el("span", { class: "progress-name" }, state.name ? ["Checking: ", el("strong", {}, [state.name])] : []),
             el("span", { class: "progress-position" }, [position])
