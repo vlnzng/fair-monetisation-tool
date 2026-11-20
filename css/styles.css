@@ -10,7 +10,6 @@
     --line: #D5DAE0;
     --line-control: #868E99;
     --muted: #4D5560;
-    --selected: #EEF0F3;
     --track: #C9CFD7;
     --sketch-fill: #DDE2E8;
 
@@ -23,9 +22,15 @@
     --on-night-body: #C9CED6;
     --on-night-muted: #A3AAB5;
 
+    /* accent: one colour, one role. Blue marks what can be acted on or is active right now,
+       plus the word "fair" in the h1 and the first bar of the mark. Never decoration. */
+    --accent: #2563A6;            /* on light: 6.2:1 on white */
+    --accent-on-night: #7DB3E8;   /* on dark: 7.9:1 on --night */
+    --accent-tint: #EAF1FA;       /* surface of a chosen answer, ink on it 15.8:1 */
+
     /* meaning */
-    --focus: #2346B5;
-    --focus-on-night: #FFFFFF;
+    --focus: var(--accent);
+    --focus-on-night: var(--accent-on-night);
     --minimal: #1D6B40;   --minimal-tint: #E7F3EC;
     --moderate: #8A5300;  --moderate-tint: #FBEFD9;
     --elevated: #B42318;  --elevated-tint: #FCE9E7;
@@ -65,8 +70,9 @@
     --section-pad: var(--s-12);
     --section-pad-tool: var(--s-12);
 
-    /* focus ring colour, switched to white inside dark sections */
+    /* focus ring and accent for links and disclosures, switched inside dark sections */
     --focus-ring: var(--focus);
+    --accent-text: var(--accent);
 }
 
 @media (min-width: 640px) {
@@ -164,14 +170,30 @@ h2 {
 
 a {
     color: inherit;
+    text-decoration-color: var(--accent-text);
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
+}
+
+/* Links that look like buttons keep their own hover. */
+a:not(.btn):hover {
+    color: var(--accent-text);
+    text-decoration-thickness: 2px;
 }
 
 button,
 input {
     font: inherit;
     color: inherit;
+}
+
+input {
+    caret-color: var(--accent);
+}
+
+::selection {
+    background: color-mix(in srgb, var(--accent) 22%, var(--surface));
+    color: var(--ink);
 }
 
 :focus-visible {
@@ -225,8 +247,14 @@ input {
 /* Dark sections: hero, method, footer. */
 .night {
     --focus-ring: var(--focus-on-night);
+    --accent-text: var(--accent-on-night);
     background: var(--night);
     color: var(--on-night);
+}
+
+.night ::selection {
+    background: var(--accent-on-night);
+    color: var(--night);
 }
 
 /* ---- Utilities ----------------------------------------------------------- */
@@ -257,7 +285,7 @@ input {
     transform: translateY(-200%);
 }
 
-/* Appears over the dark hero, so the ring is white. */
+/* Appears over the dark hero, so the ring takes the accent for dark backgrounds. */
 .skip-link:focus-visible {
     --focus-ring: var(--focus-on-night);
     transform: none;
@@ -279,9 +307,10 @@ input {
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
+/* Primary stays ink, also on hover. The accent goes to secondary buttons on hover. */
 .btn--primary { background: var(--ink); color: var(--surface); }
 .btn--primary:hover { background: color-mix(in srgb, var(--ink) 90%, transparent); }
 
@@ -290,7 +319,7 @@ input {
 .btn--primary.is-waiting:hover { background: var(--line); color: var(--muted); }
 
 .btn--secondary { background: var(--surface); color: var(--ink); border: 1.5px solid var(--ink); }
-.btn--secondary:hover { background: var(--selected); }
+.btn--secondary:hover { border-color: var(--accent); color: var(--accent); }
 
 .btn--on-night { background: var(--surface); color: var(--night); }
 .btn--on-night:hover { background: color-mix(in srgb, var(--surface) 90%, transparent); }
@@ -338,6 +367,10 @@ input {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
+}
+
+.disclosure > summary:hover {
+    color: var(--accent-text);
 }
 
 .disclosure > summary::-webkit-details-marker { display: none; }
@@ -587,7 +620,7 @@ input {
 .offer-euro {
     padding: 0 var(--s-2);
     border-radius: var(--r-sketch);
-    background: var(--on-night);
+    background: var(--accent-on-night);
     color: var(--night);
     font-size: 11px;
     font-weight: 700;
@@ -762,15 +795,19 @@ input {
     .offer-marker--3, .offer-note[data-note="3"] { animation-delay: 1.7s; }
 
     .offer-note,
+    .offer-note-number,
+    .offer-note-pattern,
+    .offer-marker,
     .offer-timer,
     .offer-price,
     .offer-decline,
     .offer-euro {
-        transition: background-color 0.15s ease, outline-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+        transition: background-color 0.15s ease, color 0.15s ease, outline-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
     }
 }
 
-/* Pointer devices: a note lights up its element on the card. */
+/* Pointer devices: a note lights up its element on the card. At rest everything is white,
+   only the note under the pointer and its element take the accent. */
 @media (hover: hover) and (min-width: 640px) {
     .offer-note {
         margin: calc(-1 * var(--s-2));
@@ -787,7 +824,18 @@ input {
     .offer:has([data-note="1"]:hover) [data-target="1"],
     .offer:has([data-note="2"]:hover) [data-target="2"],
     .offer:has([data-note="3"]:hover) [data-target="3"] {
-        outline-color: var(--on-night);
+        outline-color: var(--accent-on-night);
+    }
+
+    .offer-note:hover .offer-note-number,
+    .offer:has([data-note="1"]:hover) .offer-marker--1,
+    .offer:has([data-note="2"]:hover) .offer-marker--2,
+    .offer:has([data-note="3"]:hover) .offer-marker--3 {
+        background: var(--accent-on-night);
+    }
+
+    .offer-note:hover .offer-note-pattern {
+        color: var(--accent-on-night);
     }
 
     .offer:has([data-note="2"]:hover) .offer-euro {
@@ -902,8 +950,9 @@ input {
     gap: var(--s-2);
 }
 
+/* Answered questions and the current step in the accent. */
 .progress-group[aria-current="step"] {
-    color: var(--ink);
+    color: var(--accent);
     font-weight: 700;
 }
 
@@ -919,7 +968,7 @@ input {
 }
 
 .progress-segments i.is-done {
-    background: var(--ink);
+    background: var(--accent);
 }
 
 .progress-compact {
@@ -935,6 +984,7 @@ input {
     font-size: var(--fs-meta);
 }
 
+.progress-compact-row strong { color: var(--accent); }
 .progress-compact-row span { color: var(--muted); }
 
 @media (min-width: 640px) {
@@ -1207,21 +1257,22 @@ input {
     background: var(--surface);
 }
 
+/* Hover stays ink, so hover and selection never look the same. */
 .option:hover,
 .check:hover {
     border-color: var(--ink);
 }
 
-/* Selected: 2px border, so the padding shrinks by half a pixel and nothing moves. */
+/* Selected: 2px border in the accent, so the padding shrinks by half a pixel and nothing moves. */
 .option:has(input:checked) {
-    border: 2px solid var(--ink);
+    border: 2px solid var(--accent);
     padding: 0 calc(var(--pad-end) - 0.5px) 0 calc(var(--pad-start) - 0.5px);
-    background: var(--selected);
+    background: var(--accent-tint);
     font-weight: 600;
 }
 
 .option:has(input:checked) .option-dot {
-    border: 5.5px solid var(--ink);
+    border: 5.5px solid var(--accent);
 }
 
 .option:has(input:focus-visible),
@@ -1262,14 +1313,14 @@ input {
 }
 
 .check:has(input:checked) {
-    border: 2px solid var(--ink);
+    border: 2px solid var(--accent);
     padding: calc(var(--s-3) - 0.5px) calc(var(--s-4) - 0.5px);
-    background: var(--selected);
+    background: var(--accent-tint);
 }
 
 .check:has(input:checked) .check-box {
-    border-color: var(--ink);
-    background: var(--ink);
+    border-color: var(--accent);
+    background: var(--accent);
 }
 
 /* White check drawn with two borders. */
@@ -1666,11 +1717,13 @@ input {
     text-decoration: none;
 }
 
+/* Hover like a link: border and text in the accent. The chosen example stays as it is. */
 .example-link:hover {
-    border-color: var(--on-night);
+    border-color: var(--accent-on-night);
 }
 
-.example-link[aria-current="true"] {
+.example-link[aria-current="true"],
+.example-link[aria-current="true"]:hover {
     border-color: var(--on-night);
     background: var(--on-night);
     color: var(--night);
@@ -1999,7 +2052,8 @@ input {
     text-align: left;
 }
 
-/* A button that looks like a text link (Change, Copy entry). */
+/* A button that looks like a text link (Change, Copy entry) and behaves like one:
+   underline in the accent, on hover the text in the accent and the line 2px. */
 .link-button {
     min-width: 44px;
     min-height: 44px;
@@ -2008,9 +2062,15 @@ input {
     background: none;
     color: var(--ink);
     text-decoration: underline;
+    text-decoration-color: var(--accent-text);
     text-decoration-thickness: 1px;
     text-underline-offset: 4px;
     cursor: pointer;
+}
+
+.link-button:hover {
+    color: var(--accent-text);
+    text-decoration-thickness: 2px;
 }
 
 /* Copy entry sits at the end of the "Based on" line. Its 44px hit area reaches into the space
@@ -2165,6 +2225,10 @@ input {
     min-height: 64px;
     list-style: none;
     cursor: pointer;
+}
+
+.accordion > summary:hover {
+    color: var(--accent-text);
 }
 
 .accordion > summary::-webkit-details-marker { display: none; }
