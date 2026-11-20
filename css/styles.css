@@ -141,7 +141,8 @@ h1, h2, h3, h4, h5, h6, legend {
     text-wrap: balance;
 }
 
-p {
+p,
+figcaption {
     text-wrap: pretty;
 }
 

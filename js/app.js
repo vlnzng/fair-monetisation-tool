@@ -359,7 +359,7 @@ function renderAbout() {
     return el("div", { class: "step-card" }, [
         el("div", { class: "step-head step-head--about" }, [
             stepTitle("About this flow"),
-            el("p", { class: "text-small text-muted prose" }, ["A flow is one path from the shop screen to the confirmation. Two answers decide which questions follow. Nobody reads a question that does not apply."]),
+            el("p", { class: "text-small text-muted prose" }, ["One path from the shop screen to the confirmation. Two answers decide which questions follow."]),
             exampleLink
         ]),
         el("div", { class: "field" }, [
