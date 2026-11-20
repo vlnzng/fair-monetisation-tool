@@ -31,7 +31,7 @@ export const VECTORS = [
         rule: "points"
     },
     {
-        name: "Example: Offer aimed at children",
+        name: "Hard trigger: offer aimed at children",
         k1: "y",
         k2: [],
         no: ["C1", "D1", "D3"],
@@ -61,7 +61,7 @@ export const VECTORS = [
         rule: "area-elevated"
     },
     {
-        name: "Direct purchase, one Unsure",
+        name: "Example: Clear direct purchase",
         k1: "n",
         k2: [],
         no: [],

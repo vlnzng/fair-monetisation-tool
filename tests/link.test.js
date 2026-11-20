@@ -43,6 +43,15 @@ test("link: the three examples load from their fragment", () => {
     }
 });
 
+test("link: a removed or unknown example opens no result, also after a reload", () => {
+    for (const key of ["children", "unknown", "", "Currency"]) {
+        assert.equal(stateFromExample(key), null, key);
+        assert.equal(decodeFragment(`#example=${key}`), null, key);
+    }
+    const stored = { ...stateFromExample("pass"), example: "children", step: "result", returnToResult: false };
+    assert.equal(readRun(stored).example, null);
+});
+
 test("link: section anchors and incomplete or invalid runs are ignored", () => {
     const valid = encodeFragment(gemShop);
     const invalid = [

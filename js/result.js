@@ -3,12 +3,16 @@ import { AREAS } from "./data/areas.js";
 import { SOURCES } from "./data/sources.js";
 import { EXAMPLES } from "./data/examples.js";
 import { runAssessment } from "./scoring.js";
+import { stateFromExample } from "./link.js";
 import { LEVEL_WORDS, ANSWER_WORDS, AS_OF, TRIGGER_QUESTION, includesText, reasonLines } from "./report.js";
 import { sketch } from "./sketches.js";
 import { el, externalLink } from "./utils.js";
 
 const bars = size => el("span", { class: size === "large" ? "bars bars--large" : "bars", "aria-hidden": "true" },
     [el("i"), el("i"), el("i")]);
+
+// The level of each example, worked out from its answers, never written down.
+const EXAMPLE_LEVELS = Object.fromEntries(EXAMPLES.map(e => [e.key, runAssessment(stateFromExample(e.key)).overall]));
 
 // Answers never take a level colour: Unsure is ink, like Yes and No.
 const answerWord = code => el("strong", { class: "answer" }, [ANSWER_WORDS[code]]);
@@ -104,7 +108,8 @@ function reasonDetail(detail, hardTrigger) {
     }, [TRIGGER_QUESTION]), after];
 }
 
-// Shown only while an example is loaded (spec 7.1).
+// Shown only while an example is loaded (spec 7.1). Each example shows its level as bars; the
+// result below names it, so the bars are hidden from assistive technology.
 function renderExampleBar(current, actions) {
     return el("div", { class: "example-bar night" }, [
         el("div", { class: "example-bar-text" }, [
@@ -113,9 +118,10 @@ function renderExampleBar(current, actions) {
                 el("a", {
                     class: "example-link",
                     href: `#example=${e.key}`,
+                    "data-level": EXAMPLE_LEVELS[e.key],
                     "aria-current": e.key === current ? "true" : null,
                     onclick: ev => { ev.preventDefault(); actions.example(e.key); }
-                }, [e.title])
+                }, [bars(), e.title])
             ))
         ]),
         el("button", { class: "btn btn--on-night btn--small", type: "button", onclick: actions.restart }, ["Check your own flow"])

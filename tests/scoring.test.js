@@ -80,12 +80,14 @@ test("selection: before K1 is answered, only the context-free questions count", 
     assert.deepEqual(ids({ k1: null, k2: ["vc"] }), ids({ k1: "n", k2: ["vc"] }));
 });
 
-test("examples: 8, 12 and 9 questions, and every listed answer is asked", () => {
-    const expected = { currency: 8, pass: 12, children: 9 };
+test("examples: 6, 12 and 8 questions, one per level, and every listed answer is asked", () => {
+    const expected = { direct: 6, pass: 12, currency: 8 };
+    const levels = { direct: "minimal", pass: "moderate", currency: "elevated" };
     for (const e of EXAMPLES) {
         const asked = ids(e);
         assert.equal(asked.length, expected[e.key], e.key);
         assert.ok([...e.no, ...e.unsure].every(id => asked.includes(id)), e.key);
+        assert.equal(assess(e).overall, levels[e.key], e.key);
     }
 });
 

@@ -14,7 +14,7 @@ It started as the practical part of the master's thesis *Fair Monetisation in Vi
 2. **Questions.** One step per area, each question answered with Yes, No or Unsure, based on what a player can see. Every question is phrased so that Yes is the unproblematic answer, and each has an example of how Yes can look.
 3. **Result.** An overall level with the reason in one sentence, a level per area, every No and Unsure with what it means and which source it rests on, and all answers with a way to change them. The result can be copied as a report, shared as a link or printed.
 
-Three example results are built in: an opaque currency shop (Elevated), a high-pressure battle pass (Moderate) and an offer aimed at children (Elevated through the hard trigger).
+Three example results are built in, one per level: a clear direct purchase (Minimal), a high-pressure battle pass (Moderate) and an opaque currency shop (Elevated). The level shown next to each example is worked out from its answers.
 
 ### Areas and questions
 
@@ -72,10 +72,10 @@ The result also names the rule that decided the level (`points`, `two-moderate`,
 
 The result lives in the URL fragment, which browsers never send to the server.
 
-- Example: `#example=currency`, `#example=pass` or `#example=children`
+- Example: `#example=direct`, `#example=pass` or `#example=currency`
 - Own run: `#k1=y&k2=vc,sub&a=A1n,A2y,A3n,B1y,B2y,B3y,C1y,C2n,D1y,D2u,D3y,D4y&name=Gem%20Shop`
 
-`k1` is the under-18 answer (`y`, `n`, `u`), `k2` the ticked items (`vc`, `sub`, `limited`, `random`, may be empty), `a` every asked question with its answer, and `name` the optional flow name, cut to 40 characters. A fragment that does not list exactly the questions asked for its `k1` and `k2` is ignored. Section anchors such as `#method` are left alone.
+`k1` is the under-18 answer (`y`, `n`, `u`), `k2` the ticked items (`vc`, `sub`, `limited`, `random`, may be empty), `a` every asked question with its answer, and `name` the optional flow name, cut to 40 characters. A fragment that does not list exactly the questions asked for its `k1` and `k2`, or names an example that does not exist, is ignored. Section anchors such as `#method` are left alone.
 
 The result has its own entry in the browser history, so Back leaves it and Forward returns to it. Question steps add no entries.
 
