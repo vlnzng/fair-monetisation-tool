@@ -1404,17 +1404,29 @@ input {
 }
 
 /* Missing answer (spec 6.6). The bar sits in the card's padding: flush with the card's inner
-   edge on mobile, where the padding is 20px, and further in from 640px. */
-.question.is-missing {
-    margin-left: calc(-1 * var(--s-5));
-    padding-left: calc(var(--s-5) - 3px);
-    border-left: 3px solid var(--error);
+   edge on mobile, where the padding is 20px, and further in from 640px. It is drawn on its own,
+   so the line above keeps the length of all other lines. The decisive entry (7.5) shares it. */
+.question.is-missing,
+.entry.is-decisive {
+    --bar-colour: var(--error);
+    position: relative;
+}
+
+.question.is-missing::before,
+.entry.is-decisive::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(-1 * var(--s-5));
+    width: 3px;
+    background: var(--bar-colour);
 }
 
 @media (min-width: 640px) {
-    .question.is-missing {
-        margin-left: calc(-1 * (var(--s-5) + 3px));
-        padding-left: var(--s-5);
+    .question.is-missing::before,
+    .entry.is-decisive::before {
+        left: calc(-1 * (var(--s-5) + 3px));
     }
 }
 
@@ -2002,18 +2014,9 @@ input {
     scroll-margin-top: var(--s-4);
 }
 
-/* The answer that sets the result: a bar built like the missing-answer bar, in --elevated. */
+/* The answer that sets the result: the missing-answer bar, in --elevated. */
 .entry.is-decisive {
-    margin-left: calc(-1 * var(--s-5));
-    padding-left: calc(var(--s-5) - 3px);
-    border-left: 3px solid var(--elevated);
-}
-
-@media (min-width: 640px) {
-    .entry.is-decisive {
-        margin-left: calc(-1 * (var(--s-5) + 3px));
-        padding-left: var(--s-5);
-    }
+    --bar-colour: var(--elevated);
 }
 
 /* Mobile and tablet: meta, question, sketch, caption, text, sources. */
