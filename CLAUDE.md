@@ -25,13 +25,13 @@ production tool. In this order:
 2. The core of the thesis stays recognisable. Extensions and corrections are welcome.
 3. Details deep in the logic may stay open. Document them instead of perfecting them.
 
-## Current work: v2.0 review
+## Current work: v2.0 release
 
-- Status (November 2026): all build steps of spec section 14 are done on `dev`.
-  Valentin now tests the Vercel preview of `dev` and reports what he finds.
-  Next: fixes from that review, then `dev` is merged into `main` and Valentin tags `v2.0`.
-- Fixes from the review: one topic per commit (`fix`, `style`, `content`), checked like
-  the build steps (tests, browser at all widths) before committing.
+- Status (20 November 2026): v2 is built, reviewed (including an external review) and
+  live on `main`. Next: Valentin tags `v2.0` on the release commit. After that, only
+  small fixes.
+- Fixes: one topic per commit (`fix`, `style`, `content`), checked before committing
+  (tests, browser at all widths).
 - Spec: `docs/v2/v2-spec.md`. Source of truth for design, copy, questions and scoring.
   Decisions taken during the build are recorded there. Content data:
   `docs/v2/v2-content.json`. Mockups: `docs/v2/design-reference/*.html`
@@ -79,8 +79,8 @@ may be added when it clearly improves the project. Nothing unnecessary.
 - Valentin makes the decisions. Propose, do not decide.
 - Changes to question wording, points, thresholds or scoring rules beyond the spec:
   explain the change and its effect on results, then wait for his OK.
-- When a decision is needed, lay it out plainly: the current state in v1.2, what the
-  thesis says, what the spec plans, where they differ and why, then a recommendation.
+- When a decision is needed, lay it out plainly: the current state, what the thesis says,
+  what the spec says, where they differ and why, then a recommendation.
 - If code, spec and README disagree, say so instead of silently fixing one of them.
 - One topic per change. Keep diffs small. Do not touch files outside the task.
 - Code comments: short, and only where the code does not explain itself.
@@ -90,16 +90,13 @@ may be added when it clearly improves the project. Nothing unnecessary.
 
 ## Git
 
-- Branches: `main` stays at v1.2 and is live. All v2 work happens on `dev`, where the
-  page does not have to work between steps. When v2 is done, `dev` is merged into `main`.
+- Branches: `main` is live (v2). Work happens on `dev`; `main` follows by fast-forward
+  when Valentin agrees, so `dev` and `main` never diverge.
 - Claude prepares the changes and splits them into commits by feature or task
-  (not too fine-grained). For v2 work on `dev` (build steps and review fixes), Claude
-  checks the result itself (tests, browser at all widths), commits when it passes and
-  pushes to `dev`, so the Vercel preview shows it, then reports. Anything else, every
-  other push and every merge wait for Valentin's OK.
-- Review fixes on `dev` are pushed right away. Every other push waits until Valentin
-  has approved the commits.
-- Never run `git tag` or anything that rewrites history. Valentin tags (`v2.0` at the end).
+  (not too fine-grained). Claude checks the result itself (tests, browser at all widths),
+  commits when it passes and pushes to `dev`, so the Vercel preview shows it, then reports.
+  Pushes to `main` and merges wait for Valentin's OK.
+- Never run `git tag` or anything that rewrites history. Valentin tags.
 - After committing, summarise each commit in one to three lines.
 - No attribution lines of any kind (no Co-Authored-By, no "Generated with").
 
@@ -136,6 +133,14 @@ Examples:
 - The tool must not use the pressure patterns it assesses
   (no urgency, no manipulative button hierarchy, no pre-selected answers).
 - Blue only for action, selection, focus, the word fair in the h1 and the first bar of the mark.
+- Same kind of element, same form, across the whole page (spec section 13):
+  - A fill (ink or white) means a button. A choice is never filled: 2 px accent border.
+  - Hover never changes a fill. Choices hover in the text colour, so hover never looks like
+    the choice.
+  - Every underline marks something to act on and looks the same: accent line, on hover
+    text in the accent and the line 2 px. Actions stand on their own, never inside a sentence.
+  - Section heads: h2, and where there is one, a small muted line directly below.
+  - Exceptions only with a reason, recorded in the spec.
 - Copy: plain British English, no em dashes, no all-caps labels,
   nothing that tells the reader what to change in their game.
 
@@ -146,6 +151,6 @@ Examples:
 - From spec section 15: the mapping of questions to legal rules is not checked against
   the legal texts; the 2026 timeline entries come from research; the share image is
   not designed.
-- Small things left from the build: between 640 and about 740 px the header links wrap
+- Small things left from the build: between 640 and about 720 px the header links wrap
   below the tool name and its mark; the countdown's wrap from 00:00 to 09:59 was not
   watched live.
