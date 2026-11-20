@@ -133,6 +133,7 @@ Examples:
 - No tracking and no external requests.
 - The tool must not use the pressure patterns it assesses
   (no urgency, no manipulative button hierarchy, no pre-selected answers).
+- Blue only for action, selection, focus, the word fair in the h1 and the first bar of the mark.
 - Copy: plain British English, no em dashes, no all-caps labels,
   nothing that tells the reader what to change in their game.
 
@@ -141,8 +142,8 @@ Examples:
 - No Content-Security-Policy yet.
 - The repository has no licence file.
 - From spec section 15: the mapping of questions to legal rules is not checked against
-  the legal texts; the 2026 timeline entries and the DFA and PEGI links come from
-  research and are not checked; favicon and share image are not designed.
-- Small things left from the build: between 640 and about 700 px the header links wrap
-  below the tool name; the interactive flow was checked in Chromium only (Firefox by
-  screenshots); the countdown's wrap from 00:00 to 09:59 was not watched live.
+  the legal texts; the 2026 timeline entries come from research; the share image is
+  not designed.
+- Small things left from the build: between 640 and about 740 px the header links wrap
+  below the tool name and its mark; the countdown's wrap from 00:00 to 09:59 was not
+  watched live.
