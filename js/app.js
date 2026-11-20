@@ -34,13 +34,14 @@ function stepKeys() {
 // ---- Flow ---------------------------------------------------------------------
 
 // Renders a step, scrolls the tool to the top and moves focus to the step title
-// or, when given, to another element of the new view.
-function goTo(step, focusSelector = "[data-step-title]") {
+// or, when given, to another element of the new view (the first selector that matches).
+function goTo(step, focusSelectors = ["[data-step-title]"]) {
     state.step = step;
     if (step === "result") state.returnToResult = false;
     render();
     root.scrollIntoView({ block: "start" });
-    root.querySelector(focusSelector)?.focus({ preventScroll: true });
+    const target = [].concat(focusSelectors).map(s => root.querySelector(s)).find(Boolean);
+    target?.focus({ preventScroll: true });
 }
 
 // Any edit turns a loaded example into the person's own run, under the same name.
@@ -108,12 +109,13 @@ function next() {
     goTo(keys[keys.indexOf(state.step) + 1]);
 }
 
-// "Change" in the result: open the step that holds the answer, focus its first option.
+// "Change" in the result: open the step that holds the answer and focus the chosen option,
+// as a radio group does, or the first one.
 function change(target) {
     state.returnToResult = true;
-    if (target === "k1" || target === "k2") return goTo("about", `input[name="${target}"]`);
     const q = asked().find(x => x.id === target);
-    goTo(q.area, `input[name="${q.id}"]`);
+    const name = q ? q.id : target;
+    goTo(q ? q.area : "about", [`input[name="${name}"]:checked`, `input[name="${name}"]`]);
 }
 
 function primaryLabel() {
