@@ -48,6 +48,8 @@ export function runAssessment({ k1 = null, k2 = [], answers = {} } = {}) {
     if (hardTrigger) areaLevels.D = "elevated";
 
     const total = round2(Object.values(areaPoints).reduce((sum, p) => sum + p, 0));
+    // Unweighted on purpose (spec 9.3): the thresholds stay the same for every audience, so the
+    // under-18 factors in the total reach them sooner.
     const base = asked.filter(q => q.id !== HARD_TRIGGER).reduce((sum, q) => sum + q.points.n, 0);
     const thresholds = {
         moderateAbove: round2(base * OVERALL_SHARE.moderateAbove),
