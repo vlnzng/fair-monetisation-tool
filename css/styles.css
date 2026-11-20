@@ -438,11 +438,34 @@ input {
     padding-block: var(--s-4);
 }
 
+/* The bars stand on the baseline of the name's first line. */
 .site-name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-2);
     font-size: var(--fs-small);
     line-height: 1.2;
     font-weight: 700;
 }
+
+/* The mark: three bars like the level display. The first and smallest stands for Minimal,
+   the fair result, and is the only one in the accent. The name itself stays white. */
+.site-mark {
+    flex: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.site-mark i {
+    width: 4px;
+    border-radius: 1px; /* as in the favicon */
+    background: var(--on-night);
+}
+
+.site-mark i:nth-child(1) { height: 6px; background: var(--accent-on-night); }
+.site-mark i:nth-child(2) { height: 10px; }
+.site-mark i:nth-child(3) { height: 14px; }
 
 .site-nav {
     display: none;
@@ -452,7 +475,11 @@ input {
 
 @media (min-width: 640px) {
     .site-header { padding-block: var(--s-6); }
-    .site-name { font-size: var(--fs-h4); }
+    .site-name { gap: var(--s-3); font-size: var(--fs-h4); }
+    .site-mark i { width: 5px; }
+    .site-mark i:nth-child(1) { height: 8px; }
+    .site-mark i:nth-child(2) { height: 13px; }
+    .site-mark i:nth-child(3) { height: 18px; }
     .site-nav { display: flex; }
 }
 
@@ -471,6 +498,11 @@ input {
     display: flex;
     flex-direction: column;
     gap: var(--s-5);
+}
+
+/* "fair" in the h1, in the accent for dark backgrounds. Colour only, nowhere else on the page. */
+.accent-word {
+    color: var(--accent-on-night);
 }
 
 .hero-lead {
