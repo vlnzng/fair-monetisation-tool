@@ -311,9 +311,10 @@ input {
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-/* Primary stays ink, also on hover. The accent goes to secondary buttons on hover. */
+/* Hover never changes a fill: the text takes the accent of the button's own surface, and the
+   border too where there is one. So primary stays ink, also on hover. */
 .btn--primary { background: var(--ink); color: var(--surface); }
-.btn--primary:hover { background: color-mix(in srgb, var(--ink) 90%, transparent); }
+.btn--primary:hover { color: var(--accent-on-night); }
 
 /* Primary step button while questions of the step are open. Still a working button. */
 .btn--primary.is-waiting,
@@ -323,7 +324,7 @@ input {
 .btn--secondary:hover { border-color: var(--accent); color: var(--accent); }
 
 .btn--on-night { background: var(--surface); color: var(--night); }
-.btn--on-night:hover { background: color-mix(in srgb, var(--surface) 90%, transparent); }
+.btn--on-night:hover { color: var(--accent); }
 
 .btn--small {
     min-height: 44px;
